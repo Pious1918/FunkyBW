@@ -1,0 +1,120 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+<section class="content-main">
+    <div class="container mt-5">
+        <h2 class="mb-4">Order List</h2>
+
+
+         <!-- Filter Form -->
+   
+    
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Total</th>
+                <th>Date & Time</th>
+                <th>Payment</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Replace this with dynamic data from your server -->
+              <% orders.forEach(order => { %>
+                <tr>
+                  <td><%= order._id %></td>
+                  <td><%= order.user.name %></td>
+                  <td><%= order.user.email %></td>
+                  <td>₹<%= order.totalAmount %></td>
+                  <td><%= order.createdAt.toLocaleDateString() %></td>
+                 
+                  <td><%= order.payment %></td>
+                  <td>
+                    <a href="/admin/detailopen?orderId=<%= order._id %>" class="btn btn-primary btn-sm">Details</a>
+                  </td>
+                </tr>
+              <% }) %>
+              <!-- Add more rows as needed -->
+            </tbody>
+          </table>
+        </div>
+    
+      </div>
+    
+
+
+
+
+
+
+
+      <!-- ... Your existing code ... -->
+
+<div class="pagination-area mt-15 mb-50">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-start">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+      <% if (currentPage < totalPages) { %>
+        <li class="page-item">
+          <a class="page-link" href="?page=<%= currentPage + 1 %>">
+            <i class="material-icons md-chevron_right"></i>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+
+<!-- ... Your existing code ... -->
+
+      <!-- Bootstrap JS and Popper.js -->
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+  
+      <script>
+        document.getElementById('filterForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+    
+            // Get the selected filter value
+            var filterValue = document.getElementById('filterBy').value;
+    
+            // Redirect to the same page with the selected filter as a query parameter
+            window.location.href = '/admin/orderlist?filter=' + filterValue;
+        });
+    
+        function shouldDisplayOrder(order) {
+            // Get the filter value from the query parameter
+            var filter = new URLSearchParams(window.location.search).get('filter');
+    
+            // If no filter is selected, return true
+            if (!filter || filter === 'all') {
+                return true;
+            }
+    
+            // Check if the order matches the selected filter
+            return order.payment.toLowerCase() === filter;
+        }
+    </script>
+    
+
+
+
+</section>
+
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

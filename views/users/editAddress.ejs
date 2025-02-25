@@ -1,0 +1,192 @@
+
+
+
+
+<%- include('../layouts/header.ejs') %>
+<section class="p-5">
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form id="addressForm" method="post" action="/editaddress/<%= editAddress._id %>" name="add" onsubmit="return validateForm()">
+          <div class="card rounded-0">
+            <div class="card-header">
+              <h5 class="fw-bold mb-0">Edit Address</h5>
+            </div>
+            <div class="card-body">
+              <div class="">
+                <h6 class="fw-bold mb-3">Contact Details</h6>
+                <div class="mb-3">
+                  <label for="floatingName" class="form-label">Name</label>
+                  <input type="text" class="form-control rounded-0" id="floatingName" name="name" placeholder="Name" value="<%= editAddress.name %>" required>
+                  <small id="dangerName" class="text-danger"></small>
+                </div>
+                <div class="mb-3">
+                  <label for="floatingMobileNo" class="form-label">Mobile No</label>
+                  <input type="text" class="form-control rounded-0" id="floatingMobileNo" name="mobileNo" value="<%= editAddress.mobileNo %>" placeholder="Mobile No" required>
+                  <small id="dangerMobileNo" class="text-danger"></small>
+                </div>
+                <div class="mb-3">
+                  <label for="floatingExtraMobileNo" class="form-label">Extra Mobile No (Optional)</label>
+                  <input type="text" class="form-control rounded-0" id="floatingExtraMobileNo" name="extraMobileNo" value="<%= editAddress.
+                  extraMobileNo %>" placeholder="Extra Mobile No">
+                </div>
+              </div>
+  
+              <div class="mt-4">
+                <h6 class="fw-bold mb-3">Address</h6>
+                <div class="mb-3">
+                  <label for="floatingPinCode" class="form-label">Pin Code</label>
+                  <input type="text" class="form-control rounded-0" id="floatingPinCode" value="<%= editAddress.pinCode %>" name="pinCode" placeholder="Pin Code" required>
+                  <small id="dangerpin" class="text-danger"></small>
+                </div>
+                <div class="mb-3">
+                  <label for="floatingAddress" class="form-label">Address (House No, Building, Street, Area)</label>
+                  <input type="text" class="form-control rounded-0" id="floatingAddress" name="address" value="<%= editAddress.address %>" placeholder="Address" required>
+                  <small id="dangeraddress" class="text-danger"></small>
+                </div>
+                <div class="mb-3">
+                  <label for="floatingLocalityTown" class="form-label">Locality/Town</label>
+                  <input type="text" class="form-control rounded-0" id="floatingLocalityTown" value="<%= editAddress.localityTown %>" name="localityTown" placeholder="Locality/Town" required>
+                  <small id="dangerlocality" class="text-danger"></small>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <label for="floatingCity" class="form-label">City/District</label>
+                      <input type="text" class="form-control rounded-0" id="floatingCity" value="<%= editAddress.city %>" name="city" placeholder="City/District" required>
+                      <small id="dangercity" class="text-danger"></small>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <label for="floatingState" class="form-label">State</label>
+                      <input type="text" class="form-control rounded-0" id="floatingState" value="<%= editAddress.state %>" name="state" placeholder="State" required>
+                      <small id="dangerstate" class="text-danger"></small>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="mb-3">
+                  <label for="defaultAddress" class="form-label">Make Default Address</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="defaultAddress" id="defaultAddressYes" value="true" value="true" <% if (editAddress.defaultAddress) { %>checked<% } %>>
+                    <label class="form-check-label" for="defaultAddressYes">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="defaultAddress" id="defaultAddressNo" value="false"   value="false" <% if (!editAddress.defaultAddress) { %>checked<% } %>>
+                    <label class="form-check-label" for="defaultAddressNo">No</label>
+                  </div>
+                </div>
+              </div>
+  
+            </div>
+            <div class="card-footer">
+              <div class="d-grid">
+                <button type="submit" class="btn btn-dark py-3 px-5 btn-ecomm">Update Address</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- Add a script to handle radio button changes -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const radioButtons = document.querySelectorAll('input[name="defaultAddress"]');
+      radioButtons.forEach(radioButton => {
+        radioButton.addEventListener('change', () => {
+          // Uncheck other radio buttons when one is selected
+          radioButtons.forEach(otherRadioButton => {
+            if (otherRadioButton !== radioButton) {
+              otherRadioButton.checked = false;
+            }
+          });
+        });
+      });
+    });
+  </script>
+  
+
+  <script>
+    function validateForm() {
+        // Validate  Name
+        var Name = document.forms["add"]["floatingName"].value.trim();
+        if (Name === "") {
+            document.getElementById("dangerName").innerText="Name must be filled out"
+            // alert("Product Name must be filled out");
+            return false;
+        }
+
+        // Validate Quantity (Stock)
+        var mob = document.forms["add"]["floatingMobileNo"].value.trim();
+        if (mob === "" ) {
+            document.getElementById("dangerMobileNo").innerText="Mobile number must be filled out"
+            // alert("Quantity must be a positive number");
+            return false;
+        }
+
+        // Validate Color
+        var pin = document.forms["add"]["floatingPinCode"].value.trim();
+        if (pin === "") {
+            document.getElementById("dangerpin").innerText="Pin must be filled out"
+            // alert("Color must be filled out");
+            return false;
+        }
+
+
+        var addd = document.forms["add"]["floatingAddress"].value.trim();
+        if (addd === "") {
+            document.getElementById("dangeraddress").innerText="Address must be filled out"
+            // alert("Color must be filled out");
+            return false;
+        }
+
+
+        var loc = document.forms["add"]["floatingLocalityTown"].value.trim();
+        if (loc === "") {
+            document.getElementById("dangerlocality").innerText="Locality should be given"
+            // alert("Color must be filled out");
+            return false;
+        }
+
+
+        var city = document.forms["add"]["floatingCity"].value.trim();
+        if (city === "") {
+            document.getElementById("dangercity").innerText="City should be given"
+            // alert("Color must be filled out");
+            return false;
+        }
+       
+        var state = document.forms["add"]["floatingState"].value.trim();
+        if (state === "") {
+            document.getElementById("dangerstate").innerText="State should be given"
+            // alert("Color must be filled out");
+            return false;
+        }
+
+
+      
+
+     
+
+      
+
+        // Add more validation rules as needed
+
+        return true;
+    }
+</script>
+
+<%- include('../layouts/footer.ejs') %>

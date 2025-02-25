@@ -1,0 +1,115 @@
+
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+<div class="container mt-4">
+
+
+<!-- 
+  <div class="mb-3">
+    <label for="startDate" class="form-label">Start Date:</label>
+    <input type="date" class="form-control" id="startDate" name="startDate">
+</div>
+
+<div class="mb-3">
+    <label for="endDate" class="form-label">End Date:</label>
+    <input type="date" class="form-control" id="endDate" name="endDate">
+</div>
+
+<div class="mb-3">
+    <button type="button" class="btn btn-primary filter-button" id="filterByDate">Filter</button>
+</div> -->
+
+<form id="dateFilterForm" method="get" action="custom-sales-report?startDate=<%= startDate %>&endDate=<%= endDate %>">
+
+  <div class="mb-3">
+      <label for="startDate" class="form-label">Start Date:</label>
+      <input type="date" class="form-control" id="startDate" name="startDate" value="<%= startDate %>">
+  </div>
+
+  <div class="mb-3">
+      <label for="endDate" class="form-label">End Date:</label>
+      <input type="date" class="form-control" id="endDate" name="endDate" value="<%= endDate %>">
+  </div>
+
+  <div class="mb-3">
+      <button type="submit" class="btn btn-primary filter-button" id="filterByDate">Filter</button>
+  </div>
+
+  <div class="mb-3">
+    <button type="button" class="btn btn-primary filter-button" id="printReport">Print Report(pdf)</button>
+</div>
+
+<button type="button" class="btn btn-primary filter-button" onclick="exportToExcel('tableid')">Print Report(Excel)</button>
+
+
+</form>
+
+
+
+    <!-- Display the data here -->
+    <div id="customSalesReport">
+      <table class="table" id="tableid">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Order Date</th>
+            <!-- Add more columns if needed -->
+          </tr>
+        </thead>
+        <tbody>
+          <% customSalesWithProductInfo.forEach(order => { %>
+            <tr>
+              <td><%= order._id %></td>
+              <td><%= order.productInfo.name %></td>
+              <td><%= order.items.quantity %></td>
+              <td><%= order.items.price %></td>
+              <td><%= order.createdAt.toLocaleDateString() %></td>
+                 
+              <!-- Add more cells if needed -->
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    
+
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+
+<script>
+  document.getElementById('printReport').addEventListener('click', function () {
+      window.print();
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+<script>
+  function exportToExcel(tableId) {
+    console.log("haii")
+  const table = document.getElementById(tableId);
+  const ws = XLSX.utils.table_to_sheet(table);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+  // Save the file
+  XLSX.writeFile(wb, 'daily_report.xlsx');
+}
+
+</script>
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>
+
+

@@ -1,0 +1,78 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">New Referraloffer</h2>
+                <!-- <div>
+                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                    <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                </div> -->
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Basic</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/editref/<%= currentref._id%>" method="post" name="myform" onsubmit="return validateForm()">
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">ReferalBonus</label>
+                            <input type="text" placeholder="Type here" class="form-control" name="referal" />
+                            <small id="referalError" class="text-danger"></small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">SignupBonus</label>
+                            <input type="text" placeholder="percentage out of 100" class="form-control" name="signup" />
+                            <small id="signupError" class="text-danger"></small>
+                        </div>
+
+
+                      
+              
+
+                        <div>
+                            <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
+                            <button class="btn btn-md rounded font-sm hover-up" type="submit">Update</button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+            <!-- card end// -->
+          
+            <!-- card end// -->
+        </div>
+     
+            <!-- card end// -->
+        <!-- </div> -->
+    </div>
+</section>
+<script>
+    function validateForm() {
+        var referal = document.forms["myform"]["referal"].value.trim();
+        var signup = document.forms["myform"]["signup"].value.trim();
+
+        // ReferalBonus validation
+        if (referal === "" || isNaN(referal) || parseFloat(referal) <= 0) {
+            document.getElementById("referalError").innerText = "ReferalBonus must be a non-negative number and should be filled out";
+            return false;
+        }
+
+        // SignupBonus validation
+        if (signup === "" || isNaN(signup) || parseFloat(signup) < 0) {
+            document.getElementById("signupError").innerText = "SignupBonus must be a non-negative number";
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

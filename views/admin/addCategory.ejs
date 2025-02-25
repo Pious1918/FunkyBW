@@ -1,0 +1,127 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Add Categories</h2>
+         
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Basic</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/addCategory" method="post" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Category title</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="category_name" name="category_name" />
+                        </div>
+
+                   
+
+
+                        <% if (typeof message !== 'undefined') { %>
+                            <p style="color: red;"><%= message %></p>
+                        <% } %>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Media</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-upload">
+                                    <img src="/imgs/theme/upload.svg" alt="" />
+                                    <input class="form-control" type="file" name="category_image" />
+                                     
+                                    <p></p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
+                            <button class="btn btn-md rounded font-sm hover-up" type="submit" value="upload">Add Category</button>
+                        </div>
+                   
+                    </form>
+                </div>
+            </div>
+            <!-- card end// -->
+      
+        </div>
+    
+    </div>
+</section>
+
+
+
+<script>
+    function validateForm() {
+        var name = document.getElementById("product_title").value;
+        var discount = document.getElementById("product_color").value;
+        var startingDate = document.getElementById("starting").value;
+        var expiryDate = document.getElementById("ending").value;
+        var minPrice = document.getElementById("minprice").value;
+        var maxPrice = document.getElementById("maxprice").value;
+
+        if (name == "") {
+            alert("Please enter a coupon name.");
+            return false;
+        }
+
+        if (discount == "") {
+            alert("Please enter a discount percentage.");
+            return false;
+        }
+
+        if (isNaN(discount) || discount < 0 || discount > 100) {
+            alert("Discount percentage must be a number between 0 and 100.");
+            return false;
+        }
+
+        if (startingDate == "") {
+            alert("Please select a starting date.");
+            return false;
+        }
+
+        if (expiryDate == "") {
+            alert("Please select an expiry date.");
+            return false;
+        }
+
+        if (minPrice == "") {
+            alert("Please enter a minimum total.");
+            return false;
+        }
+
+        if (isNaN(minPrice) || minPrice < 0) {
+            alert("Minimum total must be a non-negative number.");
+            return false;
+        }
+
+        if (maxPrice == "") {
+            alert("Please enter a maximum total.");
+            return false;
+        }
+
+        if (isNaN(maxPrice) || maxPrice < 0) {
+            alert("Maximum total must be a non-negative number.");
+            return false;
+        }
+
+        if (parseFloat(minPrice) > parseFloat(maxPrice)) {
+            alert("Minimum total cannot be greater than Maximum total.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

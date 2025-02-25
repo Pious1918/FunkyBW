@@ -1,0 +1,105 @@
+<%- include('../layouts/header.ejs') %>
+
+
+
+
+<style>
+    body {
+    margin-top: 20px;
+    background: #FFF5EE;
+}
+
+.card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+
+.avatar.sm {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: .818125rem;
+}
+
+.table-nowrap .table td,
+.table-nowrap .table th {
+    white-space: nowrap;
+}
+
+.table>:not(caption)>*>* {
+    padding: 0.75rem 1.25rem;
+    border-bottom-width: 1px;
+}
+
+table th {
+    font-weight: 600;
+    background-color: #eeecfd !important;
+}
+
+.fa-arrow-up {
+    color: #00CED1;
+}
+
+.fa-arrow-down {
+    color: #FF00FF;
+}
+</style>
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<div class="container p-5">
+    <div class="row">
+        <div class="col-12 mb-3 mb-lg-5">
+            <div class="position-relative card table-nowrap table-card">
+                <div class="card-header align-items-center">
+                    <h5 class="mb-0">All Transactions</h5>
+                    <p class="text-success">current Balance : <%= userWallet.balance %></p>
+                    <a href="/wallet">
+                        <button type="button" class="btn btn-primary mt-2">Go to Wallet</button>
+                    </a>
+                    
+                    <!-- <p class="mb-0 small text-muted">1 Pending</p> -->
+                </div>
+                
+                <div class="table-responsive">
+
+                    <table class="table mb-0">
+                        <thead class="small text-uppercase bg-body text-muted">
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                             <% userWallet.transactions.forEach(transaction => { %>
+                <tr class="align-middle">
+                    <td><%= transaction._id %></td>
+                    <td><%= transaction.amount %></td>
+                    <td class="<%= transaction.description === 'deposit' ? 'text-success' : (transaction.description === 'withdrawal' ? 'text-danger' : '') %>">
+                        <%= transaction.description %>
+                      </td>
+                      
+                    <td><%= new Date(transaction.createdAt).toLocaleString() %></td>
+
+
+                 
+                </tr>
+            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-end">
+                    <!-- <a href="#!" class="btn btn-gray">View All Transactions</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

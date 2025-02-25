@@ -1,0 +1,148 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+<section class="content-main">
+    <div class="row">
+        <% if (typeof message !== 'undefined') { %>
+            <h5><%= message %></h5>
+          <% } %>
+
+    <form action="/admin/addcouponn" name="myform" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return validateForm()">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Add New Coupon</h2>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                
+                <h5></h5>
+
+             
+
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label for="product_title" class="form-label">Coupon Name</label>
+                        <input type="text" placeholder="Type here" class="form-control" id="product_title" name="name" />
+                        <small id="couponNameError" class="text-danger"></small>
+                      
+                    </div>
+                    <div class="row gx-3">
+                   
+                        <div class="col-md-4 mb-3">
+                            <label for="product_color" class="form-label">Discount(%)</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_color" name="discount" />
+                            <small id="discountError" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_color" class="form-label">Starting Date</label>
+                            <input type="date" placeholder="Type here" class="form-control" id="product_color" name="starting" />
+                            <small id="startingDateError" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_size" class="form-label">Expiry Date</label>
+                            <input type="date" placeholder="Type here" class="form-control" id="product_size" name="ending" />
+                            <small id="expiryDateError" class="text-danger"></small>
+                        </div>
+                    </div>
+                 
+                </div>
+            </div>
+          
+        
+            <!-- card end// -->
+        </div>
+        <div class="col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                
+                    <div class="mb-4">
+                        <label class="form-label">Minimum Total</label>
+                        <input type="text" placeholder="Type here" class="form-control" name="minprice" />
+                        <small id="minTotalError" class="text-danger"></small>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Maximum Total</label>
+                        <input type="text" placeholder="Type here" class="form-control" name="maxprice" />
+                        <small id="maxTotalError" class="text-danger"></small>
+                    </div>
+                   
+                    <hr />
+                    
+          
+                </div>
+
+                
+            </div>
+            <!-- card end// -->
+        </div>
+        <div>
+            <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
+            <button class="btn btn-md rounded font-sm " type="submit">create coupon</button>
+        </div>
+    </form>
+    </div>
+</section>
+
+<script>
+    function validateForm() {
+        // Validate Coupon Name
+        var couponName = document.forms["myform"]["name"].value.trim();
+        if (couponName === "") {
+            document.getElementById("couponNameError").innerText = "Coupon Name must be filled out";
+            return false;
+        }
+
+        // Validate Discount
+        var discount = document.forms["myform"]["discount"].value.trim();
+        if (discount === "" || isNaN(discount) || parseFloat(discount) < 20 || parseFloat(discount) > 80) {
+            document.getElementById("discountError").innerText = "Discount must be a number between 20 and 80";
+            return false;
+        }
+
+        // Validate Starting Date
+        var startingDate = document.forms["myform"]["starting"].value.trim();
+        if (startingDate === "") {
+            document.getElementById("startingDateError").innerText = "Starting Date must be filled out";
+            return false;
+        }
+
+        // Validate Expiry Date
+        var expiryDate = document.forms["myform"]["ending"].value.trim();
+        if (expiryDate === "") {
+            document.getElementById("expiryDateError").innerText = "Expiry Date must be filled out";
+            return false;
+        }
+
+        // Validate Minimum Total
+        var minTotal = document.forms["myform"]["minprice"].value.trim();
+        if (minTotal === "" || isNaN(minTotal) || parseFloat(minTotal) < 500) {
+        document.getElementById("minTotalError").innerText = "Minimum Total must be 500 or above";
+        return false;
+        }
+
+
+        // Validate Maximum Total
+        // var minTotal = parseFloat(document.forms["myform"]["minprice"].value.trim());
+        var maxTotal = parseFloat(document.forms["myform"]["maxprice"].value.trim());
+
+    if (maxTotal === "" || isNaN(maxTotal) || maxTotal <= 0) {
+    document.getElementById("maxTotalError").innerText = "Maximum Total must be a positive number";
+    return false;
+    }
+
+    if (maxTotal <= minTotal) {
+    document.getElementById("maxTotalError").innerText = "Maximum Total must be greater than Minimum Total";
+    return false;
+    }
+
+
+        // Additional validation if needed
+
+        return true;
+    }
+</script>
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

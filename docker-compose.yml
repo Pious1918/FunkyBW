@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: funky
+      MONGO_INITDB_ROOT_PASSWORD: funky
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+     - MONGO_URL
+    command: "npm start"
+    # shows service interdependence. Backend service depends on mongodb service(ensures mongodb up and runs before backend start)
+    depends_on:
+      - mongodb
+    ports:
+      - "3000:3000"
+
+
+
+volumes:
+  mongodb-data:

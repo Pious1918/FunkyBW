@@ -1,0 +1,150 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Banner View</h2>
+           
+        </div>
+        <div>
+            <!-- <a href="#" class="btn btn-light rounded font-md">Export</a>
+            <a href="#" class="btn btn-light rounded font-md">Import</a> -->
+            <a href="/admin/addbanner" class="btn btn-primary btn-sm rounded">Create new</a>
+        </div>
+    </div>
+    <!-- <header class="card card-body mb-4">
+        <div class="row gx-3">
+            <div class="col-lg-4 col-md-6 me-auto">
+                <input type="text" placeholder="Search..." class="form-control" />
+            </div>
+            <div class="col-lg-2 col-6 col-md-3">
+                <select class="form-select">
+                    <option>All category</option>
+                    <option>Electronics</option>
+                    <option>Clothings</option>
+                    <option>Something else</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-6 col-md-3">
+                <select class="form-select">
+                    <option>Latest added</option>
+                    <option>Cheap first</option>
+                    <option>Most viewed</option>
+                </select>
+            </div>
+        </div>
+    </header> -->
+    <!-- card-header end// -->
+    <div class="row">
+        <% banner.forEach(banner => { %>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card card-product-grid border border-dark" style="height: 300px;">
+                <a href="#" class="img-wrap mt-2"> <img src="/bannerImages/<%= banner.banner_image %>"  /> </a>
+                <p class="text-dark mt-4 p-1">Banner Name: <%= banner.bname %></p>
+               
+                <div class="info-wrap">
+                    <div class="dropdown float-end">
+                        
+                    
+                    </div>
+                    <a href="#" class="title"></a>
+                    
+                    <!-- price-wrap.// -->
+                </div>
+               
+                
+                <button class="btn btn-danger text delete-link" data-banner-id="<%= banner._id %>" onclick="confirmDelete('<%= banner._id %>',event)">Delete</button>
+
+
+            </div>
+            
+            <!-- card-product  end// -->
+        </div>
+        <% }); %>
+       
+       
+            <!-- card-product  end// -->
+    </div>
+        <!-- col.// -->
+        
+        <!-- col.// -->
+        
+        <!-- col.// -->
+       
+        <!-- col.// -->
+        
+        <!-- col.// -->
+      
+        <!-- col.// -->
+    </div>
+    <!-- row.// -->
+
+
+  
+
+</section>
+
+
+<script>
+
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+// function confirmDelete(categoryId, event) {
+//         var confirmation = confirm("Are you sure you want to delete?");
+
+//         if (!confirmation) {
+//             event.preventDefault();
+//             // If the user clicks "Cancel", return false to prevent the default button behavior
+//             console.log('Deletion canceled');
+//             return false;
+//         }
+//     }
+
+
+ document.addEventListener('DOMContentLoaded', function() {
+  // Select all delete buttons
+  const deleteButtons = document.querySelectorAll('.delete-link');
+
+  // Add click event listener to each delete button
+  deleteButtons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent default button behavior
+
+      // Get the banner ID from data attribute
+      const bannerId = this.getAttribute('data-banner-id');
+      
+      // Send a DELETE request to delete the banner
+      axios.delete(`/admin/deleteban/${bannerId}`)
+        .then(function(response) {
+          // Handle successful response (if needed)
+          console.log('Banner deleted successfully:', response.data);
+
+          const deletedBanner = document.querySelector(`[data-banner-id="${bannerId}"]`).closest('.col-xl-3');
+                    deletedBanner.remove();
+       
+        //   window.location.href = '/admin/banner'; 
+        })
+        .catch(function(error) {
+          // Handle error (if needed)
+          console.error('Error deleting banner:', error);
+        });
+    });
+  });
+});
+
+  </script>
+  
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

@@ -1,0 +1,45 @@
+name: CI Pipeline with Docker
+
+
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      MONGODB_URL: mongodb+srv://funky:funky@funky.htheg30.mongodb.net/funky
+    steps:
+      # Step 1: Check out the code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment (if needed for testing)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      
+
+      # Step 5: Log in to Docker Hub (skip this if not pushing to Docker Hub)
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Step 6: Build the Docker image
+      - name: Build Docker image
+        run: docker build -t nspious/funkyproject:${{ github.sha }} .
+
+      # Step 7: Push the Docker image to Docker Hub (optional)
+      - name: Push Docker image
+        run: docker push nspious/funkyproject:${{ github.sha }}

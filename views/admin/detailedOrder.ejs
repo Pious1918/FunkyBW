@@ -1,0 +1,105 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+
+
+<div class="container mt-5">
+    <!-- User Details Card -->
+    <div class="card mb-4">
+      <div class="card-header">
+        User Details
+      </div>
+      <div class="card-body">
+        <p class="card-text"><strong>Name:</strong> <%= address[0].name %></p>
+        <p class="card-text"><strong>Phone:</strong><%= address[0].mobileNo %></p>
+        
+      </div>
+    </div>
+
+    <!-- Address Card -->
+    <div class="card mb-4">
+      <div class="card-header">
+        Ordered Address
+      </div>
+      <div class="card-body">
+        
+        <p class="card-text"><strong>Address:</strong>  <%= address[0].address %></p>
+        <p class="card-text"><strong>Place:</strong> <%= address[0].localityTown %></p>
+        <p class="card-text"><strong>State:</strong> <%= address[0].state %></p>
+    </div>
+    </div>
+
+    <!-- Product Details Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orderDetails.forEach(item => { %>
+            <tr>
+              <td><img src="/productImages/<%= item.product.images[0] %>" alt="Product Image" class="img-thumbnail" style="max-width: 150px; max-height: 150px;"></td>
+
+                <td><%= item.product.name %></td>
+                <td>₹<%= item.items.price %></td>
+                <td><%= item.items.quantity %></td>
+                <td>
+                  <%= item.items.status %>
+                </td>
+                <td>
+
+                  <% if (item.items.status != 'cancelled') { %>
+                    <!-- Your action form goes here -->
+                    <form action="/admin/status?orderId=<%= item._id %>&proId=<%= item.items.product_id %>" method="POST" class="d-flex align-items-center">
+                        <div class="me-2">
+                            <select class="form-select" id="orderStatus" name="orderStatus">
+                                <option value="pending">Pending</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                      
+                        
+                          <button type="submit" class="btn btn-dark btn-sm">Submit</button>
+                    
+                    </form>
+                    <% } else { %>
+                      <p class="text-danger">Order Cancelled</p>
+                  <% } %>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

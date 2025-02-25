@@ -1,0 +1,278 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+<section class="content-main mb-4">
+    <div class="row">
+
+    <form name="editProductForm" action="/admin/edit/<%=product._id%>" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Edit your Product</h2>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                
+                <h5></h5>
+
+                <% if (typeof message !== 'undefined') { %>
+                    <h5><%= message %></h5>
+                  <% } %>
+
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label for="product_title" class="form-label">Product Name</label>
+                        <input type="text" placeholder="Type here" class="form-control" id="product_title" name="name" value="<%= product.name %>" />
+                        <small id="pronam" class="text-danger"></small>
+                    </div>
+                    <div class="row gx-3">
+                        <!-- <div class="col-md-4 mb-3">
+                            <label for="product_sku" class="form-label">SKU</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_sku" />
+                        </div> -->
+                        <div class="col-md-4 mb-3">
+                            <label for="product_color" class="form-label">Quantity</label>
+                            <input type="text" placeholder="Type here" class="form-control"
+                             id="product_color" name="countInStock" value="<%= product.countInStock %>"  />
+                             <small id="proqua" class="text-danger"></small>
+                            </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_color" class="form-label">Color</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_color" name="color" value="<%= product.color %>" />
+                            <small id="prodcolo" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_size" class="form-label">Size</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_size" name="size" value="<%= product.size %>" />
+                            <small id="prosize" class="text-danger"></small>
+                        </div>
+                    </div>
+                 
+                </div>
+            </div>
+            <!-- card end// -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">Product Description</label>
+                       
+                        <textarea placeholder="Type here" class="form-control" rows="4" name="description" value="<%= product.description %>"><%= product.description %></textarea>
+                        <small id="prodescri" class="text-danger"></small>
+                    </div>
+                </div>
+            </div>
+            <!-- card end// -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">Images</label>
+
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div>
+                                    <label class="form-label">Existing Images</label>
+                                    <% if (product.images && product.images.length > 0) { %>
+                                        <div class="d-flex flex-wrap gap-3">
+                                            <% product.images.forEach((image, index) => { %>
+                                                <div class="position-relative">
+                                                    <img src="/ProductImages/<%= image %>" alt="Existing Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" />
+                                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0" onclick="deleteImage('<%= index %>', '<%= product._id %>', '<%= image %>')">Delete</button>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <label class="form-label mt-3">Upload New Images</label>
+                                    <input class="form-control" type="file" name="images"  multiple />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
+
+
+
+            <!-- card end// -->
+        </div>
+        <div class="col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <!-- <div class="mb-4">
+                        <label class="form-label">Original Price</label>
+                        <input type="text" placeholder="Type here" class="form-control" name="original_price" />
+                    </div> -->
+                    <div class="mb-4">
+                        <label class="form-label">Sale Price</label>
+                        <input type="text" placeholder="Type here" class="form-control" name="price" value="<%= product.price %>" />
+                        <small id="priceerr" class="text-danger"></small>
+                    </div>
+                    <!-- <div class="mb-4">
+                        <label class="form-label">Tags</label>
+                        <input type="text" placeholder="Type here" class="form-control" />
+                    </div>
+                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Tech</a>
+                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Mobile</a>
+                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Apple</a> -->
+                    <hr />
+                    
+                    <h5 class="mb-3">Categories</h5>
+
+          
+                <select class="form-select" name="category_id">
+                    <option value="">Select a category</option>
+                    
+                    <% categories.forEach(category => { %>
+                    <option value="<%= category._id %>" 
+                    <% if (product.category_id && product.category_id.toString() === category._id.toString()) { %>
+                selected
+                    <% } %>
+                ><%= category.category_name %></option>
+                <% }); %>
+                </select>       
+
+
+
+
+                 
+    
+               
+
+                
+            </div>
+            <!-- card end// -->
+        </div>
+        <!-- <div> -->
+            <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
+            <button class="btn btn-md rounded font-sm" type="submit" >Update Product</button>
+        <!-- </div> -->
+    </form>
+    </div>
+</section>
+
+
+<script>
+    async function deleteImage(index, productId, imageName) {
+        console.log("Index", index);
+
+        if (confirm("Are you sure you want to delete this image?")) {
+            try {
+                const response = await fetch(`deleteImage/${productId}/${imageName}`, {
+
+                  
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log("reee",response)
+
+                if (response.ok) {
+                   
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = `/admin/edit?id=${productId}`;
+                        // Assuming 'product' is a global variable representing the current product
+                        product.images.splice(index, 1);
+                        console.log('data')
+                        // Update the UI to reflect the changes (you may need to refresh or re-render the component)
+                        window.location.href = `/admin/edit-product/${productId}`;
+                    } else {
+                        console.log("Failed to delete image", data.error);
+                        // Handle failure and show an error message if needed
+                    }
+
+
+                       
+
+                } else {
+                    console.log("Server returned an error:", response.status, response.statusText);
+                    // Handle server error and show an error message if needed
+                }
+            } catch (error) {
+                console.log("Error in deleteImage", error);
+                // Handle network errors or other issues
+            }
+        }
+    }
+</script>
+<!-- Place this script inside your EJS file, just before the closing </body> tag -->
+<script>
+    function validateForm() {
+        // Validate Product Name
+        var productName = document.forms["editProductForm"]["name"].value.trim();
+        if (!productName) {
+            document.getElementById("pronam").innerText="Product Name must be filled out"
+            // alert("Product Name must be filled out");
+
+            return false;
+        }
+
+        // Validate Quantity (Stock)
+        var quantity = document.forms["editProductForm"]["countInStock"].value.trim();
+        if (quantity === "" || isNaN(quantity) || parseInt(quantity) < 0) {
+            document.getElementById("proqua").innerText="Quantity must be a positive number"
+            // alert("Quantity must be a positive number");
+            return false;
+        }
+
+        // Validate Color
+        var color = document.forms["editProductForm"]["color"].value.trim();
+        if (!color) {
+            document.getElementById("prodcolo").innerText="Color must be filled out"
+            // alert("Color must be filled out");
+            return false;
+        }
+
+        // Validate Size
+        var size = document.forms["editProductForm"]["size"].value.trim();
+        if (!size) {
+
+            document.getElementById("prosize").innerText="Size must be filled out"
+            // alert("Size must be filled out");
+            return false;
+        }
+
+        // Validate Description
+        var description = document.forms["editProductForm"]["description"].value.trim();
+        if (!description) {
+
+            document.getElementById("prodescri").innerText="Product Description must be filled out"
+            // alert("Product Description must be filled out");
+            return false;
+        }
+
+        // Validate Price
+        var price = document.forms["editProductForm"]["price"].value.trim();
+        if (price === "" || isNaN(price) || parseFloat(price) < 0) {
+            document.getElementById("priceerr").innerText="Price must be a positive number"
+            // alert("Price must be a positive number");
+            return false;
+        }
+
+        // Validate Category
+        var category = document.forms["editProductForm"]["category_id"].value.trim();
+        if (!category) {
+            alert("Please select a category");
+            return false;
+        }
+
+        // Add more validation rules as needed
+
+        return true;
+    }
+</script>
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>
+
+
+

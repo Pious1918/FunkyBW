@@ -1,0 +1,412 @@
+
+<%- include('../layouts/header.ejs') %>
+
+
+<!--start page content-->
+<div class="page-content">
+
+
+   <!--start breadcrumb-->
+   <div class="py-4 border-bottom">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <form class="form-inline my-2 my-lg-0" action="/filter" method="GET">
+          <input class="form-control mr-sm-2 border border-success" type="search" placeholder="Search your products" aria-label="Search" name="search" id="searchInput">
+          <input type="hidden" name="selected" id="selectedCategory" value="<%= selectedCategories %>">
+          <div class="mt-4">
+            <button class="btn btn-outline-success my-2 my-sm-0 mt-5" type="submit">Search</button>
+          </div>
+          
+            
+        </form>
+
+
+      </nav>
+    </div>
+  </div>
+   <!--end breadcrumb-->
+
+
+   <!--start product grid-->
+   <section class="section-padding">
+    <h5 class="mb-0 fw-bold d-none">Product Grid</h5>
+    <div class="container">
+      <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class="bi bi-funnel me-1"></i> Filters</span></div>
+       <div class="row">
+          <div class="col-12 col-xl-3 filter-column">
+              <nav class="navbar navbar-expand-xl flex-wrap p-1">
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter" aria-labelledby="offcanvasNavbarFilterLabel">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title mb-0 fw-bold" id="offcanvasNavbarFilterLabel">Filters</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body">
+                    <div class="filter-sidebar">
+                      <div class="card rounded-0">
+                        <div class="card-header d-none d-xl-block bg-transparent">
+                            <h5 class="mb-0 fw-bold">Filters</h5>
+                        </div>
+
+                        
+                        <div class="card-body">
+                          <h6 class="p-1 fw-bold bg-light">Categories</h6>
+                            <!-- category filter -->
+                           
+                       
+
+
+
+                            <div class="mb-3">
+                              <p>Selected Category: <%= selectedCategoryName %></p>
+                              <select class="form-select border border-success" id="documentSelect" name="cat_id">
+                                <option value=" ">Select your category</option> <!-- Set "All" as selected by default -->
+                                <option value="">All</option> <!-- Set "All" as selected by default -->
+                                <% categories.forEach(category => { %>
+                                  <option value="<%= category._id %>"><%= category.category_name %></option>
+                                <% }); %>
+                                
+                                <!-- Add more options as needed -->
+                              </select>
+                            </div>
+                            <hr>
+                            
+
+                          
+
+                    
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </nav>
+          </div>
+
+          <div class="col-12 col-xl-9">
+            <div class="shop-right-sidebar">
+
+
+
+              <div class="product-grid mt-4">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+                  <% productDetails.forEach(product => { %>
+                  <div class="col">
+                    
+                    <div class="card border shadow-none">
+                      
+                      <div class="position-relative overflow-hidden">
+                        <div class="product-options d-flex align-items-center justify-content-center gap-2 mx-auto position-absolute bottom-0 start-0 end-0">
+                          <a href="javascript:;"><i class="bi bi-heart"></i></a>
+                          <a href="/productDetails/<%= product._id %>"><i class="bi bi-basket3"></i></a>
+                          <!-- <a href="javascript:;"><i class="bi bi-zoom-in"></i></a> -->
+                        </div>
+                        <a href="/productDetails/<%= product._id %>">
+                          <img src="/ProductImages/<%= product.images[0] %>" class="card-img-top" alt="...">
+                        </a>
+                      </div>
+                      <div class="card-body border-top">
+                        <h5 class="mb-0 fw-bold product-short-title"><%= product.name %></h5>
+                        
+                        <div class="product-price d-flex align-items-center gap-2 mt-2">
+                          <div class="h4 fw-bold">
+                            ₹<%= product.offerPrice || product.price %>
+                        </div>
+                        <% if (product.offerPrice && product.price !== product.offerPrice) { %>
+                          <div class="h5 fw-light text-muted text-decoration-line-through">
+                              ₹<%= product.price %>
+                          </div>
+                       
+                      <% } %>
+                         
+                          <!-- <div class="h6 fw-bold text-danger">(70% off)</div> -->
+                        </div>
+                        
+                      </div>
+                   
+                    </div>
+               
+                  </div>
+                  <% }); %>
+           
+             
+             
+            
+ 
+              </div><!--end row-->
+            </div>
+
+            <hr class="my-4">
+
+      <!-- Pagination -->
+<div class="product-pagination">
+  <nav>
+      <ul class="pagination justify-content-center">
+          <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+              <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+          </li>
+          <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+              </li>
+          <% } %>
+          <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+              <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+          </li>
+      </ul>
+  </nav>
+</div>
+
+            </div>
+          </div>
+       </div><!--end row-->
+
+       
+    </div>
+  </section>
+   <!--start product details-->
+
+
+  
+  
+ </div>
+  <!--end page content-->
+
+
+  <!--start footer-->
+
+  <!--end footer-->
+
+  <footer class="footer-strip text-center py-3 bg-section-2 border-top positon-absolute bottom-0">
+    <p class="mb-0 text-muted">© 2022. www.example.com | All rights reserved.</p>
+  </footer>
+
+
+<!--start cart-->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header bg-section-2"> 
+    <h5 class="mb-0 fw-bold" id="offcanvasRightLabel">8 items in the cart</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+      <div class="cart-list">
+
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/01.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/02.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/03.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/04.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/05.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/06.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/07.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/08.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/09.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+        <hr>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bottom-product-img">
+            <a href="product-details.html">
+              <img src="assets/images/new-arrival/10.webp" width="60" alt="">
+            </a>
+          </div>
+          <div class="">
+            <h6 class="mb-0 fw-light mb-1">Product Name</h6>
+            <p class="mb-0"><strong>1 X $59.00</strong>
+            </p>
+          </div>
+          <div class="ms-auto fs-5">
+            <a href="javascript:" class="link-dark"><i class="bi bi-trash"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="offcanvas-footer p-3 border-top">
+      <div class="d-grid">
+        <button type="button" class="btn btn-lg btn-dark btn-ecomm px-5 py-3">Checkout</button>
+      </div>
+    </div>
+
+</div>
+<!--end cat-->
+
+
+
+<!--Start Back To Top Button-->
+  <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
+<!--End Back To Top Button-->
+  
+
+   <!-- JavaScript files -->
+   <script src="assets/js/bootstrap.bundle.min.js"></script>
+   <script src="assets/js/jquery.min.js"></script>
+   <script src="assets/plugins/slick/slick.min.js"></script>
+   <script src="assets/js/main.js"></script>
+   <script src="assets/js/loader.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+  document.getElementById("documentSelect").addEventListener('change',()=>{
+
+    const selectedCat = event.target.value; // Corrected to use event.target.value
+    const searchQuery = document.getElementById("searchInput").value;
+    console.log("seet",searchQuery)
+    const apiUri =" /filter";
+    const selected = selectedCat ? `${apiUri}?selected=${selectedCat}&search=${searchQuery}` : '';
+    axios.get(selected)
+      .then(response => {
+        // Handle successful response
+        console.log(response.data);
+        
+        const redirectUrl = selected ? `/filter?selected=${selectedCat}` : apiUri;
+      window.location.href = redirectUrl;
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error fetching products:', error);
+      });
+
+
+
+
+
+
+  })
+
+
+</script>
+
+   <%- include('../layouts/footer.ejs') %>

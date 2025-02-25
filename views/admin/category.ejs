@@ -1,0 +1,128 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Category grid</h2>
+           
+        </div>
+        <div>
+            <!-- <a href="#" class="btn btn-light rounded font-md">Export</a>
+            <a href="#" class="btn btn-light rounded font-md">Import</a> -->
+            <a href="/admin/addCategory" class="btn btn-primary btn-sm rounded">Add new category</a>
+        </div>
+    </div>
+    <% if (categories.length > 0) { %>
+    <!-- card-header end// -->
+    <div class="row">
+        <% categories.forEach(category => { %>
+           
+        <div class="col-6 col-lg-4 col-md-6">
+            <div class="card card-product-grid">
+                <a href="#" class="img-wrap"> <img src="/categoryUploads/<%= category.category_image %>" alt="Product" /> </a>
+               
+                <div class="info-wrap">
+                    <div class="dropdown float-end">
+                        <a href="/admin/editcat?id=<%= category._id %>" class="btn btn-sm btn-brand rounded"> <i class="material-icons md-edit mr-5"></i>Edit </a>
+                        
+                        <% if (category.isDeleted) { %>
+                            <p class="btn btn-success text" id="listButton_<%= category._id %>" style="display:inline;" onclick="list('<%= category._id %>')">List</p>
+                            <p class="btn btn-danger text" id="unlistButton_<%= category._id %>"  style="display:none;" onclick="unlist('<%= category._id %>')">Unlist</p>
+                        <% } else { %>
+                            <p class="btn btn-danger text" id="unlistButton_<%= category._id %>"  style="display:inline;" onclick="unlist('<%= category._id %>')">Unlist</p>
+                            <p class="btn btn-success text" id="listButton_<%= category._id %>"  style="display:none;" onclick="list('<%= category._id %>')">List</p>
+                        <% } %>
+                        
+
+                            <div id="messageContainer_<%= category._id %>"></div>
+
+
+                    
+                    </div>
+                    <a href="#" class="title text-dark"><%= category.category_name %></a>
+                    
+                    <!-- price-wrap.// -->
+                </div>
+            </div>
+            <!-- card-product  end// -->
+        </div>
+       
+        <% }); %>
+
+        </div>
+      
+        <% } else { %>
+            <div class="text-center">
+                <p class="text-danger">No Category Added</p>
+            </div>
+        <% } %>
+    </div>
+
+</section>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+    async function unlist(categoryid){
+
+        try {
+
+            const response = await axios.patch(`/admin/deletecategory/${categoryid}`)
+
+            console.log("haiii",response);
+            // Show the "List" button and hide the "Unlist" button
+            // Show the message in the message container
+             document.getElementById(`messageContainer_${categoryid}`).innerText = response.data.message;
+            //  console.log(document.getElementById(`unlistButton__${categoryid}`) , "unlist"); 
+            //  console.log(document.getElementById(`listButton_${categoryid}`),  "list"); 
+
+             // Hide the "Unlist" button and show the "List" button
+               // Hide the "Unlist" button and show the "List" button
+            document.getElementById(`unlistButton_${categoryid}`).style.display = 'none';
+            document.getElementById(`listButton_${categoryid}`).style.display = 'inline';
+            
+            
+        } catch (error) {
+            console.error("Error while unlisting category:", error);
+        }
+    }
+
+    async function list(categoryid){
+
+        try {
+
+            const response = await axios.patch(`/admin/listcategory/${categoryid}`)
+            console.log("listed ",response)
+            // Show the message in the message container
+          const bar= document.getElementById(`messageContainer_${categoryid}`).innerText = response.data.message;
+            // Hide the "List" button and show the "Unlist" button
+            console.log('Category ID:', categoryid);
+        const kiss= document.getElementById(`listButton_${categoryid}`).style.display = 'none';
+        console.log('kissed:', kiss);
+
+        console.log('cant kiss:', document.getElementById(`unlistButton_${categoryid}`));
+        document.getElementById(`unlistButton_${categoryid}`).style.display = 'inline';
+        //   unlistButton.style.display = 'inline'
+            console.log('Unlist Button:', unlistButton);
+        } catch (error) {
+            console.error("error while listing category",error)
+        }
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

@@ -1,0 +1,82 @@
+<%- include('../layouts/header.ejs') %>
+
+
+
+
+
+<section class="section-padding p-5">
+    <div class="container p-5">
+      <div class="d-flex align-items-center px-3 py-2 border mb-4">
+        <div class="text-start">
+          <!-- <h4 class="mb-0 h4 fw-bold">Wishlist (10 Items)</h4> -->
+       </div>
+       <a href="/">
+        <button type="button" class="btn btn-light btn-ecomm">Continue Shopping</button>
+      </a>
+      </div>
+
+     <div class="similar-products">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
+
+
+
+        <% if (wishData.length === 0) { %>
+          <div class="col">
+            <div class="card rounded-0">
+              <div class="card-body text-center">
+                <p class="mb-0 text-danger">Your wishlist is empty.</p>
+              </div>
+            </div>
+          </div>
+        <% } else { %>
+        <% wishData.forEach((wish)=> { %>
+        <div class="col">
+         
+          <div class="card rounded-0">
+            <!-- <div class="btn-close wishlist-close position-absolute end-0 top-0"></div> -->
+            <a href="javascript:;">
+              <img src="/ProductImages/<%= wish.productDetails.images[0] %>" alt="" class="card-img-top rounded-0">
+            </a>
+            <div class="card-body border-top text-center">
+              <p class="mb-0 product-short-name"><%= wish.productDetails.name %></p>
+              <div class="product-price d-flex align-items-center gap-2 mt-3">
+                <div class="h6 fw-bold"></div>
+                <div class="h6 fw-light text-muted text-decoration-line-through"></div>
+                <% if (wish.productDetails.offerPrice && wish.productDetails.offerPrice < wish.productDetails.price) { %>
+                  <p class="text-dark"> ₹<%= wish.productDetails.offerPrice %></p>
+                 
+                <% } else { %>
+                <p class="text-dark"> ₹<%= wish.productDetails.price %></p> 
+                <% } %>
+              </div>
+            </div>
+
+            <div class="card-footer bg-transparent text-center">
+
+              <form action="/add-to-cart/<%= wish.productDetails._id %>" method="post">
+                <button type="submit" class="btn btn-success btn-ecomm">
+                  <i class="bx bxs-cart-add"></i> Add To Cart
+                </button>
+                </form>
+                <a href="/remove-wishlist/<%=wish.productDetails._id %>" class="btn btn-light btn-ecomm"><i class='bx bx-zoom-in'></i> Remove From List</a>
+            </div>
+          </div>
+       
+        </div>
+        <% }); %>
+        <% } %>
+      </div>
+      <!--end row-->
+    </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

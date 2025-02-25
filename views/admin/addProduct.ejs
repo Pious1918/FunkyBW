@@ -1,0 +1,192 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+<section class="content-main">
+    <div class="row">
+
+    <form action="/admin/add-product" method="post" enctype="multipart/form-data" name="mypro"  onsubmit="return validateForm()">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Add New Product</h2>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                
+                <h5></h5>
+
+                <% if (typeof message !== 'undefined') { %>
+                    <h5><%= message %></h5>
+                  <% } %>
+
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label for="product_title" class="form-label">Product Name</label>
+                        <input type="text" placeholder="Type here" class="form-control" id="product_title" name="name" />
+                        <small id="pronam" class="text-danger"></small>
+                    </div>
+                    <div class="row gx-3">
+                        <!-- <div class="col-md-4 mb-3">
+                            <label for="product_sku" class="form-label">SKU</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_sku" />
+                        </div> -->
+                        <div class="col-md-4 mb-3">
+                            <label for="product_color" class="form-label">Quantity</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_color" name="stock" />
+                            <small id="proqua" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_color" class="form-label">Color</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_color" name="color" />
+                            <small id="prodcolo" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_size" class="form-label">Size</label>
+                            <input type="text" placeholder="Type here" class="form-control" id="product_size" name="size" />
+                            <small id="prosize" class="text-danger"></small>
+                       
+                        </div>
+                    </div>
+                 
+                </div>
+            </div>
+            <!-- card end// -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">Product Description</label>
+                        <textarea placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- card end// -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">Images</label>
+                        <input class="form-control" type="file" name="images" required multiple />
+                    </div>
+                </div>
+            </div>
+            <!-- card end// -->
+        </div>
+        <div class="col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <!-- <div class="mb-4">
+                        <label class="form-label">Original Price</label>
+                        <input type="text" placeholder="Type here" class="form-control" name="original_price" />
+                    </div> -->
+                    <div class="mb-4">
+                        <label class="form-label">Sale Price</label>
+                        <input type="text" placeholder="Type here" class="form-control" name="price" />
+                        <small id="priceerr" class="text-danger"></small>
+                    </div>
+                    <!-- <div class="mb-4">
+                        <label class="form-label">Tags</label>
+                        <input type="text" placeholder="Type here" class="form-control" />
+                    </div>
+                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Tech</a>
+                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Mobile</a>
+                    <a href="#" class="font-xs hover-up mr-15"><i class="font-xs material-icons md-close text-body"></i> Apple</a> -->
+                    <hr />
+                    <h5 class="mb-3">Categories</h5>
+                    <div class="form-group">
+
+                      <select class="form-control" name="category_id" id="categoryDropdown">
+                        <option value="">Select a category</option>
+                        <% categories.forEach(category => { %>
+                          <option value="<%= category._id %>"><%= category.category_name %></option>
+                        <% }); %>
+                      </select>
+                    </div>
+                    
+                </div>
+
+                
+            </div>
+            <!-- card end// -->
+        </div>
+        <div>
+            <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
+            <button class="btn btn-md rounded font-sm " type="submit">Add Product</button>
+        </div>
+    </form>
+    </div>
+</section>
+
+
+
+
+<script>
+    function validateForm() {
+        // Validate Product Name
+        var productName = document.forms["mypro"]["name"].value.trim();
+        if (productName === "") {
+            document.getElementById("pronam").innerText="Product Name must be filled out"
+            // alert("Product Name must be filled out");
+            return false;
+        }
+
+        // Validate Quantity (Stock)
+        var quantity = document.forms["mypro"]["stock"].value.trim();
+        if (quantity === "" || isNaN(quantity) || parseInt(quantity) < 0) {
+            document.getElementById("proqua").innerText="Quantity must be a positive number"
+            // alert("Quantity must be a positive number");
+            return false;
+        }
+
+        // Validate Color
+        var color = document.forms["mypro"]["color"].value.trim();
+        if (color === "") {
+            document.getElementById("prodcolo").innerText="Color must be filled out"
+            // alert("Color must be filled out");
+            return false;
+        }
+
+        // Use a regular expression to check if the input consists only of letters
+        var lettersOnlyRegex = /^[A-Za-z]+$/;
+        if (!lettersOnlyRegex.test(color)) {
+            document.getElementById("prodcolo").innerText="Color must contain only letters"
+            // alert("Color must contain only letters");
+            return false;
+        }
+
+
+        // Validate Size
+        var size = document.forms["mypro"]["size"].value.trim();
+        if (size === "") {
+            document.getElementById("prosize").innerText="Size must be filled out"
+            // alert("Size must be filled out");
+            return false;
+        }
+
+        // Validate Description
+        var description = document.forms["mypro"]["description"].value.trim();
+        if (description === "") {
+            document.getElementById("prodescri").innerText="Product Description must be filled out"
+            // alert("Product Description must be filled out");
+            return false;
+        }
+
+        // Validate Price
+        var price = document.forms["mypro"]["price"].value.trim();
+        if (price === "" || isNaN(price) || parseFloat(price) <= 0) {
+            document.getElementById("priceerr").innerText="Price must be a positive number and greater than 0"
+            // alert("Price must be a positive number");
+            return false;
+        }
+
+        // Validate Images
+        var images = document.forms["mypro"]["images"].files;
+        if (images.length === 0) {
+            alert("Please select at least one image");
+            return false;
+        }
+
+        // Add more validation rules as needed
+
+        return true;
+    }
+</script>
+
+<%- include('../admin_layout/adminFooter.ejs') %>

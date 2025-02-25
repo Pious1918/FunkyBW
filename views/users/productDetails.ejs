@@ -1,0 +1,356 @@
+<%- include('../layouts/header.ejs') %>
+<style>
+  #zoom-image-container {
+        position: absolute;
+        top: 190px;
+        right: 50;
+        left: 531px;
+        width: 388px;
+        height: 400px;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 0;
+    }
+
+    #product-carousel:hover+#zoom-image-container {
+        opacity: 1;
+    }
+
+    #zoomed-image {
+        width: 50%;
+        height: auto;
+        transform: scale(3);
+        transition: transform 0.3s;
+    }
+
+    @media (max-width: 767px) {
+  #zoom-image-container {
+    width: 100%;
+    left: 0;
+    right: 0;
+    max-width: 150px; /* Adjust the max-width as needed */
+    margin: auto;
+  }
+}
+
+</style>
+
+<div class="p-3">
+
+</div>
+
+
+
+<section class="p-4">
+    <div class="container p-5">
+       <div class="row g-4">
+
+
+          <div class="col-12 col-xl-7">
+            <div class="product-images">
+                <div class="product-zoom-images">
+                  <div class="row row-cols-2 g-3">
+                 
+               
+              
+
+                    <!-- Assuming productDetails.fetchedProduct.images is an array of image paths -->
+
+
+
+
+                    <!-- Display the top image in a larger format -->
+
+
+                    <!-- Display the top image in a larger format -->
+<div class="col">
+  <div id="mainImageContainer" class="img-thumb-container overflow-hidden position-relative" data-fancybox="gallery" data-src="<%= productDetails.fetchedProduct.images[0] %>"  >
+    <img id="mainImage" src="/ProductImages/<%= productDetails.fetchedProduct.images[0] %>" class="img-fluid" alt=""  onmousemove="zoomImage(event, this)"
+    onmouseleave="resetZoomedImage()">
+
+    
+  </div>
+
+
+  <div id="zoom-image-container">
+    <img id="zoomed-image" src="">
+  </div>
+</div>
+
+<!-- Display the rest of the images below in smaller columns -->
+<div class="row">
+  <% for (var i = 0; i < productDetails.fetchedProduct.images.length; i++) { %>
+    <div class="col-sm-3">
+      <div class="img-thumb-container overflow-hidden position-relative" data-fancybox="gallery" data-src="<%= productDetails.fetchedProduct.images[i] %>"  >
+        <img class="img-thumbnail" src="/ProductImages/<%= productDetails.fetchedProduct.images[i] %>" alt="">
+      </div>
+    </div>
+  <% } %>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+               
+                 
+                   
+                  </div><!--end row-->
+                </div>
+            </div>
+          </div>
+          <div class="col-12 col-xl-5">
+            <div class="product-info">
+                  <h4 class="product-title fw-bold mb-1"><%= productDetails.fetchedProduct.name %></h4>
+                  <p class="mb-0"></p>
+
+
+                  <hr>
+
+
+                  <div class="product-price d-flex align-items-center gap-3">
+                
+                    <% if (productDetails.fetchedProduct.categoryofferPrice === 0 && productDetails.fetchedProduct.productofferPrice === 0) { %>
+                      <div class="h4 fw-bold ">
+                          ₹<%= productDetails.fetchedProduct.price %>
+                      </div>
+                     
+                      <% } else { %>
+                        <div class="h4 fw-bold">
+                          ₹<%= productDetails.carttotal %>
+                      </div>
+                      <div class="h5 fw-light text-muted text-decoration-line-through">
+                          <div class="h4 fw-bold">
+                              ₹<%= productDetails.fetchedProduct.price %>
+                          </div>
+                      </div>
+
+
+                    <% } %>
+                </div>
+
+
+
+
+
+
+
+                
+
+
+
+
+
+
+
+                
+             
+                  <p class="fw-bold mb-0 mt-1 text-success">inclusive of all taxes</p>
+
+              
+                    
+                  <div class="size-chart mt-4">
+                    <h6 class="fw-bold mb-3">Select Size</h6>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                     <div class="">
+                       <button type="button"><%= productDetails.fetchedProduct.size %></button>
+                     </div>
+                    
+                  
+                   
+                   </div>
+                  </div>
+                  <div class="cart-buttons mt-3">
+                    <div class="buttons d-flex flex-column flex-lg-row gap-3 mt-4">
+
+
+                    <% if (productDetails.fetchedProduct.countInStock >= 1) { %>
+                      <form action="/add-to-cart/<%= productDetails.fetchedProduct._id %>" method="POST">
+                        <!-- Product details (you may need to adjust the names based on your requirements) -->
+                        <button type="submit" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 w-100">
+                          <i class="bi bi-basket2 me-2"></i>Add to Bag
+                        </button>
+                      </form>
+                    <% } else { %>
+                      <p class="text-danger">Out of Stock</p>
+                    <% } %>
+                    
+                    <form id="addToWishlistForm">
+                      <input type="hidden" name="product_id" value="<%= productDetails.fetchedProduct._id %>">
+                      <button type="button" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 w-100" id="addToWishlistButton">
+                        <i class="bi bi-basket2 me-2"></i>Add to Wishlist
+                      </button>
+                    </form>
+                      <!-- <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i class="bi bi-suit-heart me-2"></i>Wishlist</a> -->
+                    </div>
+                  </div>
+                  <hr class="my-3">
+                  <div class="product-info">
+                    <h6 class="fw-bold mb-3">Product Details</h6>
+                     <p class="mb-1"><%= productDetails.fetchedProduct.description %></p>
+                     
+                  </div>
+                  <hr class="my-3">
+
+
+                 
+
+                  <hr class="my-3">
+
+            </div>
+          </div>
+       </div><!--end row-->
+    </div>
+  </section>
+   <!--start product details-->
+
+
+  
+
+  
+ </div>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+ <script>
+  $(document).ready(function() {
+    $('#addToWishlistButton').click(function(event) {
+      event.preventDefault(); // Prevent default form submission
+  
+      const productId = $('#addToWishlistForm input[name="product_id"]').val();
+  
+      $.ajax({
+        url: '/addwish/' + productId, // Construct URL with product ID
+        method: 'POST',
+        dataType: 'json', // Expect JSON response
+        success: function(response) {
+          if (response.error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops!',
+              text: response.error // Display error message from response
+            });
+          } else {
+            // Handle successful addition (optional)
+         
+
+            Swal.fire({
+              icon: 'success',
+              title: 'yayyy!',
+              text: response.success // Display error message from response
+            });
+          }
+        },
+        error: function(error) {
+          console.error(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while adding the product. Please try again.'
+          });
+        }
+      });
+    });
+  });
+  </script>
+
+
+
+
+
+ 
+
+ <!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  // Store the initial source of the main image
+  var initialMainImageSrc = $('#mainImage').attr('src');
+
+  // Attach a click event to each bottom image
+  $('.img-thumbnail').on('click', function() {
+    // Get the source of the clicked image
+    var clickedSrc = $(this).attr('src');
+
+    // Update the source of the top image
+    $('#mainImage').attr('src', clickedSrc);
+  });
+
+  // Reset the top image to the initial source when closing the fancybox
+  $("[data-fancybox]").fancybox({
+    beforeShow: function(instance, current) {
+      // Store the current source before showing
+      current.opts.$origSrc = $('#mainImage').attr('src');
+    },
+    afterClose: function(instance, current) {
+      // Restore the original source after closing
+      $('#mainImage').attr('src', current.opts.$origSrc || initialMainImageSrc);
+    }
+  });
+});
+</script>
+
+<script>
+  function zoomImage(event, element) {
+        var zoomedImage = document.getElementById('zoomed-image');
+        var zoomedImageContainer = document.getElementById('zoom-image-container')
+
+        // Calculate the position of the mouse pointer relative to the image
+        var x = event.offsetX / element.offsetWidth;
+        var y = event.offsetY / element.offsetHeight;
+
+        // Set the zoomed image source to the clicked image source
+        zoomedImage.src = element.src;
+
+        // Adjust the transform origin based on the mouse pointer position
+        zoomedImage.style.transformOrigin = (x * 100) + '% ' + (y * 100) + '%';
+
+        // Apply the zoom effect by scaling the image
+        zoomedImage.style.transform = 'scale(2)'; // Adjust the zoom level as desired
+
+        // Change z-index to 999 on mouse hover
+        zoomedImageContainer.style.zIndex = 5000;
+        zoomedImageContainer.style.opacity = 1;
+    }
+
+    function resetZoomedImage() {
+        var zoomedImageContainer = document.getElementById('zoom-image-container')
+        zoomedImageContainer.style.transform = 'none';
+        // Reset z-index to its initial value on mouse leave
+        zoomedImageContainer.style.zIndex = 1;
+        zoomedImageContainer.style.opacity = 0;
+    }
+</script>
+
+
+<!-- Make sure you include SweetAlert CSS and JS files -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    // Wait for the DOM to fully load before executing JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        // Read query parameter and show SweetAlert if error exists
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error) {
+            // Display SweetAlert if error exists
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error
+            });
+        }
+    });
+</script>
+
+<%- include('../layouts/footer.ejs') %>
+

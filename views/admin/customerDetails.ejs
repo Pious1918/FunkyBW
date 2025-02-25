@@ -1,0 +1,153 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Customer List</h2>
+            
+        </div>
+      
+    </div>
+    <div class="card mb-4">
+      
+        <!-- card-header end// -->
+
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Mobile</th>
+                            <th scope="col">Status</th>
+                            <!-- <th scope="col">Date</th> -->
+                            <th scope="col" class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i = 0; i < data.length; i++) { %>
+                        <tr>
+                            <td><%= [i+1]%></td>
+                            <td><b><%= data[i].name %></b></td>
+                            <td><%= data[i].email %></td>
+                            <td><%= data[i].mobile %></td>
+
+                            <% if (data[i].isOnline) { %>
+                            <td><span class="badge rounded-pill alert-success">Online</span></td>
+                            <% } else { %>
+
+                            
+                                <td><span class="badge rounded-pill alert-warning">Offline</span></td>
+                               <% } %>
+                                <!-- <td>03.12.2020</td> -->
+
+                            <td class="text-end">
+                                <% if (data[i].isblocked) { %>
+
+                                    <form action="/admin/unblock-user/<%= data[i]._id %>" method="POST">
+                                        <input type="hidden" name="userId" value="<%= data[i]._id %>">
+                                        <button type="submit" class="btn btn-success  rounded font-sm">unBlock</button>
+                                      </form>
+
+                                
+                                <% } else { %>
+
+                                    <form action="/admin/block-user/<%= data[i]._id %>" method="POST">
+                                        <input type="hidden" name="userId" value="">
+                                        <button type="submit" class="btn btn-danger  rounded font-sm">Block</button>
+                                      </form>
+
+                                    
+                                    <% } %>
+                                <!-- <div class="dropdown">
+                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">View detail</a>
+                                        <a class="dropdown-item" href="#">Edit info</a>
+                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                    </div>
+                                </div> -->
+                                <!-- dropdown //end -->
+                            </td>
+                            
+                            <!-- <td class="text-end">
+                                
+                                <a href="/admin/block-user/:userId" class="btn btn-success btn-md rounded font-sm">unBlock</a> -->
+                                <!-- <div class="dropdown">
+                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">View detail</a>
+                                        <a class="dropdown-item" href="#">Edit info</a>
+                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                    </div>
+                                </div> -->
+                                <!-- dropdown //end -->
+                            <!-- </td> -->
+
+
+                        </tr>
+                          <% } %>
+                 
+                    </tbody>
+                </table>
+            </div>
+            <!-- table-responsive //end -->
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+    <!-- <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div> -->
+
+    <!-- ... Your existing code ... -->
+
+<div class="pagination-area mt-15 mb-50">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-start">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+        <li class="page-item">
+          <a class="page-link" href="?page=<%= currentPage + 1 %>">
+            <i class="material-icons md-chevron_right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+  <!-- ... Your existing code ... -->
+  
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

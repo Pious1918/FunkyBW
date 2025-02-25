@@ -1,0 +1,437 @@
+<%- include('../layouts/header.ejs') %>
+
+
+  
+  <section class="bg-light py-5 ">
+   
+    <div class="container p-5">
+      <div class="row">
+       
+        <div class="col-xl-8 col-lg-8 mb-4">
+            <form action="/checkout" method="POST" id="checkoutForm"> 
+  
+          <!-- Checkout -->
+          <div class="card shadow-0 border">
+            <div class="p-4">
+              <!-- <h5 class="card-title mb-3">Add Address</h5> -->
+        
+              <div class="row">
+               
+  
+  
+               
+  
+           
+              </div>
+  
+             
+  
+              <hr class="my-4" />
+              <div id="addresserror" style="display: none; color: red;">address should be selected</div>
+              <h5 class="card-title mb-3">Shipping info</h5>
+  
+              <div class="row mb-3">
+                <% if (userAddress && userAddress.addresses.length > 0) { %>
+                    <% userAddress.addresses.forEach((addr, index) => { %>
+                <div class="col-lg-4 mb-3">
+
+                    
+                  <!-- Default checked radio -->
+                  <div class="form-check h-100 border rounded-3">
+                    <div class="p-3">
+                        <input class="form-check-input" type="radio" name="selectedAddress" id="address<%= index %>" value="<%= addr._id %>" <%= index === 0 ? 'checked' : '' %>>
+                        <label class="form-check-label" for="address<%= index %>">
+                          <%= addr.name %><br>
+                          <%= addr.address %><br>
+                          <%= addr.localityTown %>, <%= addr.city %>, <%= addr.state %>
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                <% }); %>
+                <% } %>
+
+            
+            
+              </div>
+              <a href="/addaddress" class="btn btn-primary">Add Address</a>
+  
+
+              <div class="card-body">
+                <!-- Dummy Payment Options -->
+                <div class="mb-3">
+                    <h5>Select Payment Option:</h5>
+                    <!-- <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentOption" id="creditCard" value="creditCard" checked>
+                        <label class="form-check-label" for="creditCard">
+                            Credit Card
+                        </label>
+                    </div> -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentOption" id="razorpay" value="razorpay" checked>
+                        <label class="form-check-label" for="razorpay">
+                            Razorpay
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentOption" id="cod" value="COD">
+                        <label class="form-check-label" for="cod">
+                            COD
+                        </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="paymentOption" id="wallet" value="wallet">
+                      <label class="form-check-label" for="wallet">
+                          Wallet Payment
+                      </label>
+                  </div>
+                  <span id="showError" style="display: none; color: red;" class="mt-3">Insufficient fund</span>
+                </div>
+            </div>
+  
+          
+  
+              <div class="float-end">
+             
+                <button class="btn btn-success shadow-0 border" type="submit" onclick="handlePayment()">Place order</button>
+              </div>
+            </div>
+          </div>
+          <!-- Checkout -->
+        </form>
+        </div>
+  
+
+        <div class="col-xl-4 col-lg-4 d-flex justify-content-center justify-content-lg-end">
+          <div class="ms-lg-4 mt-4 mt-lg-0" style="max-width: 320px;">
+            <p>Available coupons</p>
+            <hr>
+            <% coupons.forEach(cou => { %>
+              <p><%= cou.code %></p>
+              <% }); %>
+            <hr>
+            <h6 class="mb-3">Order Summary</h6>
+            
+            <div class="d-flex justify-content-between">
+              <p class="mb-2">Total price:</p>
+              <p class="mb-2" >₹<%= userCart[0].totalPrice %></p>
+
+              <!-- Add a hidden input to store the total price -->
+              <input type="hidden" id="originalPrice" name="totalPrice" value="<%= userCart[0].totalPrice %>">
+            </div>
+            <div class="d-flex justify-content-between" >
+              <p class="mb-2">Discount:</p>
+              <p class="mb-2 text-danger" id="discount">₹0</p>
+            </div>
+
+            <!-- <div class="d-flex justify-content-between">
+              <p class="mb-2">Shipping cost:</p>
+              <p class="mb-2">+ $14.00</p>
+            </div> -->
+
+            <hr />
+
+            <!-- <div class="d-flex justify-content-between">
+              <p class="mb-2">Total price:</p>
+              <p class="mb-2 fw-bold">$149.90</p>
+            </div> -->
+  
+            <div class="input-group mt-3 mb-4" id="applieddd">
+              <input type="text" class="form-control border" name="coupon" id="couponCodeInput" placeholder="Promo code" />
+              <button id="applyCouponButton" class="btn btn-light text-primary border">Apply</button>
+             
+             
+            </div>
+            <div id="couponErrorMessage" style="display: none; color: red;"></div>
+
+            <div id="appliedCouponInfo" style="display: none;">
+                <p>
+                    Coupon applied: <span id="appliedCouponCode"></span>
+                    <button id="cancelCouponButton" class="btn btn-light text-danger border">Cancel</button>
+                </p>
+            </div>
+
+          
+            <hr />
+            <h6 class="text-dark my-4">Items in cart</h6>
+  
+            <% userCart.forEach(cartItem => { %>
+            <div class="d-flex align-items-center mb-4">
+              <div class="me-3 position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary">
+                  1
+                </span>
+                <img src="/ProductImages/<%= cartItem.productDetails.images[0] %>" class="img-thumbnail mr-3" alt="Product Image" style="max-width: 75px; max-height: 75px;">
+            </div>
+              <div class="">
+                <h5 class="mt-0"><%= cartItem.productDetails.name %></h5>
+                <div class="price text-muted">Quantity: <%= cartItem.items.quantity %></div>
+                <div class="price text-muted">Total: ₹<%= cartItem.items.price.toFixed(2) %></div>
+              </div>
+            </div>
+            <% }); %>
+
+        
+  
+    
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  
+  <!-- Footer -->
+ 
+
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+function checkAddressSelection() {
+    // Check if any address is selected
+    const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+
+    if (!selectedAddress) {
+        // If no address is selected, show a message
+        alert('Please add/select an address.');
+
+    } else {
+        // If an address is selected, you can perform additional actions if needed
+        console.log('Address selected:', selectedAddress.value);
+    }
+}
+
+function handlePayment() {
+  event.preventDefault();  // Prevent default form submission behavior
+
+  const selectedAddress = document.querySelector('input[name="selectedAddress"]:checked');
+
+if (!selectedAddress) {
+  
+    
+
+    document.getElementById("addresserror").style.display = 'block';
+    return
+}
+
+        // Check if Razorpay option is selected
+        var razorpayOption = document.querySelector('input[name="paymentOption"]:checked').value;
+
+        if (razorpayOption === 'razorpay') {
+            // Razorpay option is selected, proceed with Razorpay payment
+            console.log("razzz");
+            confirmRazorpayPayment();
+        } else if (razorpayOption === 'COD') {
+            // COD option is selected, proceed with COD
+            console.log('Proceeding with COD...');
+            submitForm();
+        }
+        else if (razorpayOption === 'wallet') {
+            // wallet option is selected, proceed with COD
+            console.log('Proceeding with wallet...');
+            submitForm();
+        }
+        
+    }
+
+    
+
+
+	function confirmRazorpayPayment() {
+
+
+     // Prevent default form submission behavior
+     event.preventDefault();
+
+	  // Fetch order details from the server
+  
+    
+	  fetch('/create-razorpay-order', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/json',
+		}
+	  })
+   
+	  .then(response => response.json())
+	  .then(order => {
+      console.log("kk")
+		// Log order details for debugging
+		console.log('Received order details:', order);
+		console.log("payment order created successfully....")
+		// Configure Razorpay button
+		var options = {
+		  key: '<%=razorpaykey %>',
+		  amount: order.amount,
+		  currency: order.currency,
+		  order_id: order.id,
+		  name: 'Funky.com',
+		  description: 'Order Payment',
+		  handler: function (response) {
+			// Handle successful payment
+			console.log('Razorpay payment success:', response);
+  
+			// Call the create-order API after successful payment
+			createOrder(order.id); // Assuming order.id is the Razorpay order ID
+		  document.getElementById('checkoutForm').submit();
+    
+    },
+		  prefill: {
+			name: 'User Name',
+			email: 'user@example.com',
+			contact: '1234567890',
+		  },
+		  notes: {
+			address: 'User Address',
+		  },
+		  theme: {
+			color: '#012652',
+		  },
+		};
+  
+		var rzp = new Razorpay(options);
+		rzp.open();
+	  })
+	  .catch(error => {
+		console.error('Error fetching Razorpay order:', error);
+		// Handle error
+	  });
+	}
+
+
+  // --------------------------razorpay function ends here-------------------
+  
+  function submitForm() {
+        // Manually submit the form
+        
+        document.getElementById('checkoutForm').submit();
+        console.log("wallet is empty")
+        
+    }
+
+  
+	function createOrder(razorpayOrderId) {
+	  // Call the /create-order API with the Razorpay order ID
+	  fetch('/checkout', {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/json',
+		},
+	  })
+	  .then(response => response.json())
+	  .then(result => {
+		// Handle the response from the create-order API
+		console.log("ORder creating success......real product order")
+		console.log('Order creation response:', result);
+  
+		
+		// Optionally, redirect to an order confirmation page
+		if(result.success){
+			console.log('Redirecting to order confirmation page...');
+		window.location.href = '/order-confirmation';
+		}else{
+			console.error("Error creating order: ", result.error)
+      document.getElementById("showError").style.display = 'block';
+		}
+	  })
+	  .catch(error => {
+		console.error('Error creating order:', error);
+		// Handle error
+	  });
+	}
+  </script>
+
+  <!-- Footer -->
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    document.getElementById("applyCouponButton").addEventListener('click',async()=>{
+
+        try {
+
+            const couponCode = document.getElementById("couponCodeInput").value;
+            console.log("couponCode",couponCode)
+            const response = await axios.post('/applycoupon', { couponCode });
+
+               // Handle the response
+      if (response.data.success) {
+        // Coupon applied successfully
+        const appliedCouponCode = response.data.couponCode;
+        // Display the applied coupon info
+        document.getElementById("appliedCouponCode").innerText = appliedCouponCode;
+        document.getElementById("applieddd").style.display="none"
+        document.getElementById("appliedCouponInfo").style.display = 'block';
+
+          // Retrieve the original price from the frontend
+          const originalPrice = document.getElementById("originalPrice").value;
+        
+          console.log("originalPrice",originalPrice)
+          const newe = response.data.newPrice
+       
+          console.log("newe",newe)
+          document.getElementById("discount").innerText=newe
+          
+      } else {
+      
+
+        // Coupon application failed, show error message
+    const errorMessage = response.data.error;
+    const errorElement = document.getElementById("couponErrorMessage");
+    errorElement.innerText = errorMessage;
+    errorElement.style.display = 'block';
+
+      }
+           
+
+            
+        } catch (error) {
+            
+        }
+    })
+
+
+
+    // cancel couponnn
+
+    document.getElementById("cancelCouponButton").addEventListener("click", async()=>{
+
+        try {
+            
+            const response = await axios.post('/cancelCoupon');
+
+            // Handle the response
+      if (response.data.success) {
+        // Coupon removed successfully
+        // Hide the applied coupon info
+        document.getElementById("appliedCouponInfo").style.display = 'none';
+        document.getElementById("applieddd").style.display="flex"
+       
+        const newe = response.data.newPrice
+        document.getElementById("discount").innerText=newe
+       
+        // Optionally, you can update any other UI elements or perform other actions here
+      } else {
+        // Coupon removal failed, show error message
+        alert('Failed to remove coupon: ' + response.data.error);
+      }
+
+
+        } catch (error) {
+            
+        }
+
+    })
+  </script>
+
+
+
+
+
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

@@ -1,0 +1,124 @@
+<%- include('../layouts/header.ejs') %>
+
+
+<div class="page-content">
+
+    <!--start product details-->
+    <section class="section-padding">
+     <div class="container">
+       
+         <div class="row">
+           <div class="col-12 col-lg-6 col-xl-5 col-xxl-5 mx-auto">
+              <div class="card rounded-0">
+                <div class="card-body p-4">
+                  <h4 class="mb-0 fw-bold text-center">OTP Verification</h4>
+
+                  <hr>
+                 <% if (error) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    <%= error %>
+                                </div>
+                            <% } %>
+                  
+                  <form action="/verify" method="post">
+                     <div class="row g-4">
+                       <div class="col-12">
+                      
+                       
+                           <label for="exampleName" class="form-label">Enter OTP</label>
+                           <input type="text" name="otp" class="form-control rounded-0" id="name">
+                       </div>
+                       
+                    
+                     
+                       
+                       <div class="col-12">
+                         <button type="submit" class="btn btn-dark rounded-0 btn-ecomm w-100">Submit</button>
+                       </div>
+
+                       
+                      
+                     </div><!---end row-->
+                  </form>
+
+
+                  <form method="post" action="/resend">
+                    <button type="submit" id="resendBtn" class="btn btn-dark rounded-0 btn-ecomm w-100" hidden>Resend OTP</button>
+
+                    <div id="timerContainer">
+                      <p id="timerText" class="text-center mt-3"></p>
+                    </div>
+
+                  </form>
+                </div>
+              </div>
+           </div>
+         </div><!--end row-->
+        
+     </div>
+   </section>
+    <!--start product details-->
+ 
+ 
+   </div>
+   <!--end page content-->
+ 
+
+ 
+ <!--Start Back To Top Button-->
+   <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
+ <!--End Back To Top Button-->
+   
+ 
+    <!-- JavaScript files -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/plugins/slick/slick.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/loader.js"></script>
+ 
+
+
+
+
+
+<!-- Timer-related JavaScript code -->
+<script>
+  // Set the initial timer duration in seconds (300 seconds = 5 minutes)
+  let timerDuration = 100;
+
+  function updateTimer() {
+    const minutes = Math.floor(timerDuration / 60);
+    const seconds = timerDuration % 60;
+    document.getElementById('timerText').innerText = `OTP expires in ${minutes}m ${seconds}s`;
+
+    if (timerDuration > 0) {
+      timerDuration--;
+      setTimeout(updateTimer, 1000);
+    } else {
+      // Enable the resend button after the timer expires
+      document.getElementById('resendBtn').removeAttribute('hidden');
+      document.getElementById('timerContainer').innerHTML = ""; // Remove the timer text
+    }
+  }
+
+
+
+
+  // Start the initial update of the timer
+  updateTimer();
+
+  // Enable the resend button after 3 seconds
+  setTimeout(function () {
+    document.getElementById('resendBtn').removeAttribute('hidden');
+  }, 10000);
+</script>
+
+
+
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

@@ -1,0 +1,156 @@
+<%- include('../layouts/header.ejs') %>
+
+<section class="section-padding p-5">
+    <div class="container p-5">
+      <div class="d-flex align-items-center px-3 py-2 border mb-4">
+        <div class="text-start">
+          <h4 class="mb-0 h4 fw-bold">Account - Addresses</h4>
+       </div>
+      </div>
+      <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class="bi bi-person me-2"></i>Account</span></div>
+       <div class="row">
+          <div class="col-12 col-xl-3 filter-column">
+              <nav class="navbar navbar-expand-xl flex-wrap p-0">
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter" aria-labelledby="offcanvasNavbarFilterLabel">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title mb-0 fw-bold text-uppercase" id="offcanvasNavbarFilterLabel">Account</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body account-menu">
+                    <div class="list-group w-100 rounded-0">
+                      <a href="/userdashboard" class="list-group-item active"><i class="bi bi-house-door me-2"></i>Dashboard</a>
+                      <a href="/orders" class="list-group-item"><i class="bi bi-basket3 me-2"></i>Orders</a>
+                      <a href="/profile" class="list-group-item"><i class="bi bi-person me-2"></i>Profile</a>
+                      <a href="/editprofile" class="list-group-item"><i class="bi bi-pencil me-2"></i>Edit Profile</a>
+                      <a href="/editpass" class="list-group-item"><i class="bi bi-pencil me-2"></i>Change Password</a>
+                      <a href="/address" class="list-group-item"><i class="bi bi-pin-map me-2"></i>Saved Address</a>
+                      <a href="/wallet" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wallet</a>
+                     
+                      <a href="/referal" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Referal Code</a>
+                      <a href="/logout" class="list-group-item"><i class="bi bi-power me-2"></i>Logout</a>
+                    </div>
+                  </div>
+                </div>
+            </nav>
+          </div>
+          <div class="col-12 col-xl-9">
+            <div class="card rounded-0">
+              <div class="card-header bg-light">
+                  <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                      <h5 class="fw-bold mb-0">Saved Address</h5>
+                    </div>
+                    <div class="">
+                        <a href="/addaddress" class="btn btn-ecomm">
+                          <i class="bi bi-plus-lg me-2"></i>Add New Address
+                        </a>
+                        <!-- <a href="/addaddress">Add a new address</a> -->
+                      </div>
+                      
+                  </div>
+              </div>
+              <div class="card-body">
+                <% if(userAddresses.length > 0) { %>
+                    <% userAddresses.forEach((address, index) => { %>
+                        <% if (address.defaultAddress) { %>
+                <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Default Address</h6>
+                <div class="card rounded-0 mb-3">
+                  <div class="card-body">
+                    <div class="d-flex flex-column flex-xl-row gap-3">
+                      <div class="address-info form-check flex-grow-1">
+                        <input class="form-check-input" type="radio" name="flexRadioDefaultAddress" id="flexRadioDefaultAddress1" checked>
+                        <label class="form-check-label" for="flexRadioDefaultAddress1">
+                          <span class="fw-bold mb-0 h5"><%= address.name %></span><br>
+                          <%= address.address %> <br>
+                          <%= address.localityTown %>, <%= address.city %><br>
+                          <br>
+                          <%= address.state %>, <%= address.pinCode %><br>
+                          Mobile: <span class="text-dark fw-bold"><%= address.mobileNo %></span>
+                          <% if (address.extraMobileNo) { %><br>Extra Mobile: <span class="text-dark fw-bold"><%= address.extraMobileNo %></span><% } %>
+                       </label>
+                      </div>
+                     <div class="d-none d-xl-block vr"></div>
+                     <div class="d-grid gap-2 align-self-start align-self-xl-center">
+                        <!-- <button type="button" class="btn btn-outline-dark px-5 btn-ecomm">Remove</button> -->
+
+                        <form method="get" action="/deleteaddress/<%= address._id %>" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Remove Address</button>
+                          </form>
+
+                        <a href="/editaddress?addressId=<%= address._id %>"class="btn btn-outline-dark px-5 btn-ecomm">Edit</a>
+                    </div>
+                    
+                    </div>
+                  </div>
+                </div> 
+                
+                <% } else { %>
+                <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Other Address</h6>
+                <div class="card rounded-0 mb-3">
+                  <div class="card-body">
+                    <div class="d-flex flex-column flex-xl-row gap-3">
+                      <div class="address-info form-check flex-grow-1">
+                        <input class="form-check-input" type="radio" name="flexRadioDefaultAddress" id="flexRadioDefaultAddress2">
+                        <label class="form-check-label" for="flexRadioDefaultAddress2">
+                          <span class="fw-bold mb-0 h5"><%= address.name %></span><br>
+                          <%= address.address %> <br>
+                          <%= address.localityTown %>, <%= address.city %><br>
+                          <br>
+                          <%= address.state %>, <%= address.pinCode %><br>
+                          Mobile: <span class="text-dark fw-bold"><%= address.mobileNo %></span>
+                          <% if (address.extraMobileNo) { %><br>Extra Mobile: <span class="text-dark fw-bold"><%= address.extraMobileNo %></span><% } %>
+                      </label>
+                      </div>
+                    <div class="d-none d-xl-block vr"></div>
+                    <div class="d-grid gap-2 align-self-start align-self-xl-center">
+
+
+
+                        <form method="get" action="/deleteaddress/<%= address._id %>" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Remove Address</button>
+                          </form>
+                      
+                        <a href="/editaddress?addressId=<%= address._id %>" class="btn btn-outline-dark px-5 btn-ecomm">Edit</a>
+ 
+                    </div>
+                    </div>
+                  </div>
+                </div> 
+                <% } %>
+    
+                <!-- <div class="card rounded-0">
+                  <div class="card-body">
+                    <button type="button" class="btn btn-outline-dark btn-ecomm" data-bs-toggle="modal" data-bs-target="#NewAddress">Add New Address</button> 
+                  </div>
+                </div>  -->
+              </div>
+
+              <% }); %>
+              <% } else { %>
+                  <p>No addresses found. <a href="/addaddress">Add a new address</a></p>
+              <% } %>
+              
+
+            </div>
+
+    
+         </div>
+       </div>
+    </div>
+  </section>
+   
+
+
+  
+
+
+ </div>
+  <!--end page content-->
+
+
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

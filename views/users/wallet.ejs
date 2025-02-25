@@ -1,0 +1,212 @@
+<%- include('../layouts/header.ejs') %>
+
+<section class="section-padding mt-5">
+    <div class="container">
+       <div class="d-flex align-items-center px-3 py-2 border mb-4">
+        <div class="text-start">
+          <h4 class="mb-0 h4 fw-bold">Your Wallet</h4>
+       </div>
+      </div>
+      <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class="bi bi-person me-2"></i>Account</span></div>
+       <div class="row">
+          <div class="col-12 col-xl-3 filter-column">
+              <nav class="navbar navbar-expand-xl flex-wrap p-0">
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter" aria-labelledby="offcanvasNavbarFilterLabel">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title mb-0 fw-bold text-uppercase" id="offcanvasNavbarFilterLabel">Account</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body account-menu">
+                    <div class="list-group w-100 rounded-0">
+                        <a href="/userdashboard" class="list-group-item active"><i class="bi bi-house-door me-2"></i>Dashboard</a>
+                        <a href="/orders" class="list-group-item"><i class="bi bi-basket3 me-2"></i>Orders</a>
+                        <a href="/profile" class="list-group-item"><i class="bi bi-person me-2"></i>Profile</a>
+                        <a href="/editprofile" class="list-group-item"><i class="bi bi-pencil me-2"></i>Edit Profile</a>
+                        <a href="/editpass" class="list-group-item"><i class="bi bi-pencil me-2"></i>Change Password</a>
+                        <a href="/address" class="list-group-item"><i class="bi bi-pin-map me-2"></i>Saved Address</a>
+                        <a href="/wallet" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wallet</a>
+                        <!-- <a href="wishlist.html" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wishlist</a> -->
+                        <a href="/referal" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Referal Code</a>
+                        <a href="/logout" class="list-group-item"><i class="bi bi-power me-2"></i>Logout</a>
+
+                        
+                        <!-- <a href="authentication-login.html" class="list-group-item"><i class="bi bi-power me-2"></i>Logout</a> -->
+                      </div>
+                  </div>
+                </div>
+            </nav>
+          </div>
+
+
+
+          
+          <div class="col-12 col-xl-9">
+            <div class="card rounded-0">
+                
+              <div class="card-body p-lg-5">
+                <% if (userWallet) { %>
+                    <a href="/wallethistory">All Transactions</a>
+                <% } %>
+                
+                  <h5 class="mb-0 fw-bold">User Wallet</h5>
+                  <hr>
+
+
+
+
+
+                  <div class="container">
+                    <div class="row mt-4">
+                        <% if (userWallet) { %>
+                            <p>Balance: <%= userWallet.balance %></p>
+                            
+                        <% } else { %>
+                            <p>Balance: 0</p>
+                           
+                        <% } %>
+                       
+                        <div class="col-6">
+                            <button type="button" class="btn btn-success" id="addFundsBtn">Add Funds</button>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-danger" id="withdrawFundsBtn">Withdraw Funds</button>
+                        </div>
+                    </div>
+                
+                 <!-- Input field for adding funds -->
+<div class="row mt-2" id="addFundsInputField" style="display: none;">
+    <div class="col-12">
+        <label class="form-label">Enter Amount to Add:</label>
+        <form id="addFundsForm" action="/wallet" method="post">
+            <input type="number" class="form-control" id="addFundsAmount" placeholder="Enter amount" name="amount">
+            <button type="button" class="btn btn-primary mt-2" id="confirmAddFundsBtn">Add</button>
+        </form>
+    </div>
+</div>
+                
+                    <!-- Input field for withdrawing funds -->
+                    <form id="withdrawForm" action="/withdraw" method="post">
+                        <div class="row mt-2" id="withdrawFundsInputField" style="display: none;">
+                            <div class="col-12">
+                                <label class="form-label">Enter Amount to Withdraw:</label>
+                                <input type="number" class="form-control" id="withdrawFundsAmount" placeholder="Enter amount" name="withdraw">
+                                <button type="submit" class="btn btn-primary mt-2" id="withdrawFundsConfirmBtn">Withdraw</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                
+             
+
+             
+                  
+              </div>
+            </div>
+          </div>
+       </div><!--end row-->
+    </div>
+  </section>
+   <!--start product details-->
+
+
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#addFundsBtn").click(function () {
+            // Toggle visibility of the "Add Funds" input field
+            $("#addFundsInputField").toggle();
+
+            // Hide the "Withdraw Funds" input field
+            $("#withdrawFundsInputField").hide();
+        });
+
+        $("#withdrawFundsBtn").click(function () {
+            // Toggle visibility of the "Withdraw Funds" input field
+            $("#withdrawFundsInputField").toggle();
+
+            // Hide the "Add Funds" input field
+            $("#addFundsInputField").hide();
+        });
+
+
+        // Function to open Razorpay
+
+          // Define function to open Razorpay payment flow
+    function openRazorpay(amount) {
+
+           // Prepare the data to be sent in the request body
+    const requestData = {
+        amount: amount
+    };
+
+        fetch('/create-razorpay-order-wallet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData) // Convert requestData to JSON string
+        })
+        .then(response => response.json())
+        .then(order => {
+            console.log("ppp")
+            var options = {
+                key: 'rzp_test_KmvOErc3UVHtQq', // Replace with your Razorpay API key
+                amount:  Math.ceil(Number(amount) * 100), // Razorpay expects amount in paisa, so multiply by 100
+                currency: 'INR', // Update with your currency code if different
+                order_id: order.id,
+                name: 'Your Company Name',
+                description: 'Adding Funds to Wallet',
+                handler: function (response) {
+                    // Handle successful payment
+                    console.log('Razorpay payment success:', response);
+                    // Optionally, you can submit the form after successful payment
+                    document.getElementById('addFundsForm').submit();
+                },
+                prefill: {
+                    name: 'User Name',
+                    email: 'user@example.com',
+                    contact: '1234567890',
+                },
+                notes: {
+                    address: 'User Address',
+                },
+                theme: {
+                    color: '#3399cc',
+                },
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(error => {
+            console.error('Error fetching Razorpay order:', error);
+            // Handle error
+        });
+    }
+
+    // Add event listener to the "Add" button
+    document.getElementById('confirmAddFundsBtn').addEventListener('click', function () {
+        // Get the amount from the input field
+        var amount = document.getElementById('addFundsAmount').value;
+        // Call the openRazorpay function with the amount
+        openRazorpay(amount);
+    });
+       
+    });
+</script>
+
+
+
+  
+
+
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

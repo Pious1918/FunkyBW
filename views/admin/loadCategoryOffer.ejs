@@ -1,0 +1,151 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+<section class="p-5">
+
+    <div class="container">
+      <h1>Category Offer</h1>
+
+        <div class="row">
+
+            <div class="col-12 col-md-12 col-lg-12">
+                <form action="/admin/addcatoffer" method="post" onsubmit="return validateForm()" id="myform">
+
+                  <div class="mb-3">
+
+                    <label for="documentSelect" class="form-label text-dark">Select Your category</label>
+                    
+                    <select class="form-select border border-success" id="documentSelect" name="cat_id">
+                        <option value="">Select a document</option>
+                        <% category.forEach(categories => { %>
+                        <option value="<%= categories._id %>" name="cat_id"><%= categories.category_name %></option>
+                        <% }); %> 
+                        <!-- Add more options as needed -->
+                    </select>
+                   
+                  </div>
+
+                 
+
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label text-dark">Discount Percentage</label>
+                      <input type="text" name="discount" class="form-control border border-success" id="exampleInputPassword1">
+                      <small id="discountError" class="text-danger"></small>
+                    </div>
+                   
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+
+            </div>
+          
+        </div>
+    </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-12 col-lg-12">
+        <div class="card-body">
+          <div class="table-responsive">
+              <table class="table table-hover border border-success">
+                  <thead class=" border border-success">
+                   
+                      <tr>
+                          <!-- <th>#ID</th> -->
+                          <th scope="col">Category Name</th>
+                          <th scope="col">Offer Percentage</th>
+                          <th scope="col">Action</th>
+                         
+                      </tr>
+                     
+                  </thead>
+                  <tbody>
+                    <% offerCategorylist.forEach(categories => { %>
+                      <tr>
+                          <!-- <td>0901</td> -->
+                          <td><b><%= categories.categoryDetails.category_name%></b></td>
+                          <td><%= categories.categoryOffer%>%</td>
+                          <td><a class=" btn btn-danger text" href="/admin/deleteCatOffer?id=<%= categories._id %>" onclick="confirmDelete('<%= categories._id %>')">Delete</a></td>
+                   
+                      </tr>
+                      <% }); %> 
+                    
+
+                      
+                  </tbody>
+              </table>
+          </div>
+          <!-- table-responsive //end -->
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+  function confirmDelete(couponId) {
+      // Using SweetAlert instead of confirm
+      Swal.fire({
+          title: 'Are you sure want to delete the offer?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // If the user confirms, proceed with deletion
+              window.location.href = "/admin/deleteCatOffer?id=" + couponId;
+          }
+      });
+
+      // Prevent the default link behavior
+      event.preventDefault();
+  }
+</script>
+
+
+
+<script>
+
+// function confirmDelete(couponId, event) {
+//         var confirmation = confirm("Are you sure you want to delete?");
+
+//         if (!confirmation) {
+//             event.preventDefault();
+//             // If the user clicks "Cancel", return false to prevent the default button behavior
+//             console.log('Deletion canceled');
+//             return false;
+//         }
+//     }
+
+
+  function validateForm() {
+   
+
+      // Validate Discount
+      var discount = document.forms["myform"]["discount"].value.trim();
+      if (discount === "" || isNaN(discount) || parseFloat(discount) < 20 || parseFloat(discount) > 80) {
+          document.getElementById("discountError").innerText = "Discount must be a number between 20 and 80";
+          return false;
+      }
+
+
+    }
+</script>
+
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

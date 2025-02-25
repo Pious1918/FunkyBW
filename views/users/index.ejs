@@ -1,0 +1,265 @@
+<%- include('../layouts/header.ejs') %>
+
+
+
+<!--start top header-->
+
+<!--start page content-->
+<div class="page-content">
+  <!--start carousel-->
+  <section class="slider-section bg-dark">
+    <div class="container">
+      <div
+        id="carouselExampleCaptions"
+        class="carousel slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-indicators">
+          <% banner.forEach((banner, index) => { %>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="<%= index %>"
+            class="<%= index === 0 ? 'active' : '' %>"
+            aria-current="true"
+          ></button>
+          <% }); %>
+        </div>
+        <div class="carousel-inner">
+          <% banner.forEach((banner, index) => { %>
+          <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+            <div class="row d-flex align-items-center">
+              <img
+                src="/bannerImages/<%= banner.banner_image %>"
+                class="img-fluid"
+                alt="..."
+              />
+            </div>
+          </div>
+          <% }); %>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <!--end carousel-->
+
+  <!--start Featured Products slider-->
+  <section class="section-padding">
+    <div class="container">
+      <div class="text-center pb-3">
+        <h3 class="mb-0 h3 fw-bold">Featured Products</h3>
+      </div>
+
+      <div class="product-thumbs">
+        <% products.forEach(product => { %> <% if (!product.isDeleted) { %>
+        <div class="card border border-dark" style="height: 450px">
+          <div class="position-relative overflow-hidden">
+     
+            <!-- change herereeeeeeeeee -->
+            <a href="/productDetails/<%= product._id %>">
+              <img
+                src="/ProductImages/<%= product.images[0] %>"
+                class="card-img-top"
+                alt="..."
+              />
+            </a>
+          </div>
+          <div class="card-body">
+            <div class="product-info text-center">
+              <h6 class="mb-1 fw-bold product-name"><%= product.name %></h6>
+
+              <p class="mb-0 h6 fw-bold product-price">₹<%= product.price %></p>
+            </div>
+          </div>
+        </div>
+
+        <% } %> <% }); %>
+      </div>
+    </div>
+  </section>
+  <!--end Featured Products slider-->
+
+  <!-- category starts from here -->
+
+  <!--start cartegory slider-->
+  <section class="cartegory-slider section-padding bg-section-2">
+    <div class="container">
+      <div class="text-center pb-3">
+        <h3 class="mb-0 h3 fw-bold">Top Categories</h3>
+      </div>
+      <div class="cartegory-box">
+        <% categories.forEach(category => { %> <% if (!category.isDeleted) { %>
+        <a disabled>
+          <div class="card">
+            <div class="card-body">
+              <div class="overflow-hidden">
+                <img
+                  src="/categoryUploads/<%= category.category_image %>"
+                  class="card-img-top rounded-0"
+                  alt="..."
+                />
+              </div>
+              <div class="text-center">
+                <h5 class="mb-1 cartegory-name mt-3 fw-bold"></h5>
+                <h6 class="mb-0 product-number fw-bold">
+                  <%= category.category_name %>
+                </h6>
+              </div>
+            </div>
+          </div>
+        </a>
+        <% } %> <% }); %>
+      </div>
+    </div>
+  </section>
+  <!--end cartegory slider-->
+
+  <!--start footer-->
+  <section class="footer-section bg-section-2 section-padding">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-lg-4 g-4">
+        <div class="col">
+          <div class="footer-widget-6">
+            <img src="assets/images/logo.webp" class="logo-img mb-3" alt="" />
+            <h5 class="mb-3 fw-bold">About Us</h5>
+            <p class="mb-2">
+              Gentlemen, get ready to showcase your cool personality with our
+              range of men’s wear. Wear your heart on your sleeve or go
+              sleeveless with our T-Shirts. Kill the cold with our sweatshirts
+              or make your cool moves with our jeans. Lee brings a wide range of
+              men’s clothing: men’s T-Shirts, men’s shirts, men’s winter wear
+              and men’s jeans. Enjoy online shopping for men. Flaunt your charm
+              with our men’s clothing. Put on Funky and step into the creator’s
+              party artfully!
+            </p>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="footer-widget-9">
+            <h5 class="mb-3 fw-bold">Follow Us</h5>
+            <div class="social-link d-flex align-items-center gap-2">
+              <a href="javascript:;"><i class="bi bi-facebook"></i></a>
+              <a href="javascript:;"><i class="bi bi-twitter"></i></a>
+              <a href="javascript:;"><i class="bi bi-linkedin"></i></a>
+              <a href="javascript:;"><i class="bi bi-youtube"></i></a>
+              <a href="javascript:;"><i class="bi bi-instagram"></i></a>
+            </div>
+            <div class="mb-3 mt-3">
+              <h5 class="mb-0 fw-bold">Support</h5>
+              <p class="mb-0 text-muted">funky@gmail.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end row-->
+      <div class="my-5"></div>
+    </div>
+  </section>
+  <!--end footer-->
+
+  <footer
+    class="footer-strip text-center py-3 bg-section-2 border-top positon-absolute bottom-0"
+  >
+    <p class="mb-0 text-muted">© www.funky.com | All rights reserved.</p>
+  </footer>
+
+  <!--start quick view-->
+
+  <!-- Modal -->
+
+  <!--end quick view-->
+
+  <!--Start Back To Top Button-->
+  <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
+  <!--End Back To Top Button-->
+
+ 
+
+  <!-- JavaScript files -->
+
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addToWishlistButtons = document.querySelectorAll('.add-to-wishlist');
+
+        addToWishlistButtons.forEach(button => {
+            button.addEventListener('click', async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                const productId = this.getAttribute('data-product-id');
+                console.log("productId", productId);
+
+                try {
+                    // Send POST request using Axios
+                    const response = await axios.post(`/addwish/${productId}`);
+
+                    // Handle the response
+                    if (response.status === 200) {
+                        console.log('Product added to wishlist');
+                        // Redirect to the desired page after adding the product to the wishlist
+                        // window.location.href = '/';
+
+                        
+                    } else {
+                        // Check the response data for specific error message
+                        const responseData = response.data;
+                        console.log("responseData", responseData);
+                        if (responseData.error === 'Product already in wishlist') {
+                            console.log('Product already in wishlist');
+                            // Display custom message using SweetAlert
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Product already in wishlist',
+                                text: '',
+                            });
+                        } else {
+                            // Display generic error message
+                            console.error('Failed to add product to wishlist');
+                            alert('Failed to add product to wishlist');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error adding product to wishlist:', error);
+                    alert('Error adding product to wishlist');
+                }
+            });
+        });
+    });
+</script>
+
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/plugins/slick/slick.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/index.js"></script>
+<script src="/js/loader.js"></script>
+
+<!-- SweetAlert library -->
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

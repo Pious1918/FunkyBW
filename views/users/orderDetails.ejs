@@ -1,0 +1,94 @@
+<%- include('../layouts/header.ejs') %>
+<section class="mt-5 p-3">
+    <div class="container mt-4">
+        <div class="row">
+          
+          <!-- Product Details Card -->
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <div class="card-header">
+                Product Details
+              </div>
+              <div class="card-body">
+               
+
+                <h5 class="card-title">Product Name :  <%= orderdetails.product.name%></h5>
+                <p class="card-text"><%= orderdetails.product.description%></p>
+                <!-- <a href="" class="btn btn-primary">View Product</a> -->
+
+              </div>
+            </div>
+          </div>
+    
+       
+                   <!-- Address Details Card -->
+                   <div class="col-md-4 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                      Delivery Address Details
+                      </div>
+                      
+                      <div class="card-body">
+                        
+                          <p class="card-text"><strong>Name:</strong> <%= address.addresses[0].name%></p>
+                          <p class="card-text"><strong>Address:</strong><%= address.addresses[0].address%> 
+                            
+                            <%= address.addresses[0]. localityTown%></p>
+                            <p class="card-text"><strong>State:</strong><%= address.addresses[0].state%> 
+                          <p class="card-text"><strong>Phone:</strong> <%= address.addresses[0]. mobileNo%></p>
+                      
+                      </div>
+                    </div>
+                  </div>
+        
+    
+              <!-- Order Details Card -->
+
+                <div class="col-md-4 mb-4">
+                  <div class="card">
+                    <div class="card-header">
+                      Order Details
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text"><strong>Amount: <%= orderdetails.totalAmount %></strong></p>
+                      <p class="card-text"><strong>Payment Method: <%= orderdetails.payment %></strong> </p>
+                      <p class="card-text"><strong>Order Date:  <%= orderdetails.createdAt.toLocaleDateString() %></strong> </p>
+                      <p class="card-text"><strong>Order status: <%= orderdetails.items.status %></strong> </p>
+
+                      <% if (orderdetails.items.status === 'returned') { %>
+                        <p class="mb-0 text-danger"><strong>Return Reason:</strong> <%= orderdetails.items.returnreason %></p>
+                    <% } %>
+                      <!-- <button class="btn btn-success">Track Order</button> -->
+                    </div>
+                  </div>
+                </div>
+          
+    
+        </div>
+      </div>
+
+
+</section>
+
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('../layouts/footer.ejs') %>
+
+

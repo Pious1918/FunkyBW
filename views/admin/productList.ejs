@@ -1,0 +1,145 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Products List</h2>
+            
+        </div>
+        <div>
+            <!-- <a href="#" class="btn btn-light rounded font-md">Export</a>
+            <a href="#" class="btn btn-light rounded font-md">Import</a> -->
+            <a href="/admin/add-product" class="btn btn-primary btn-sm rounded">Create new</a>
+        </div>
+    </div>
+
+ <div class="card mb-4">
+    <header class="card-header">
+        <div class="row align-items-center">
+            <div class="col col-check flex-grow-0">
+            </div>
+        </div>
+    </header>
+    <!-- card-header end// -->
+
+    <div class="table-responsive"> <!-- Wrap the table inside a div with class "table-responsive" -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Product offer price</th>
+                    <th>Category Offer price</th>
+                    <th>Category</th>
+                    <th>Color</th>
+                    <th>In Stock</th>
+                    <th>Description</th>
+                    <th>Size</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (product.length > 0) { %>
+                <% product.forEach(function(product) { %>
+                    <% if (!product.isDeleted) { %>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <a class="itemside" href="#">
+                                    <div class="left">
+                                        <img src="/ProductImages/<%= product.images[0] %>" class="img-sm img-thumbnail" alt="Item" />
+                                    </div>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0"><%= product.name %></h6>
+                                    </div>
+                                </a>
+                            </td>
+                            <td><%= product.price %></td>
+                            <td><%= product.productofferPrice %></td>
+                            <td><%= product.categoryofferPrice %></td>
+                            <td><%= product.category_id.category_name %></td>
+                            <td><%= product.color %></td>
+                            <td><%= product.countInStock %></td>
+                            <td><%= product.description %></td>
+                            <td><%= product.size %></td>
+                            <td>
+                                <a style="width: 90px;" href="/admin/edit?id=<%= product._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
+                                <a style="width: 90px;" href="/admin/deleteproduct?id=<%= product._id %>" onclick="confirmDelete('<%= product._id %>' , event)" class="btn btn-sm font-sm btn-light rounded mt-2"> <i class="material-icons md-delete_forever"></i> Delete </a>
+                            </td>
+                        </tr>
+                    <% } %>
+                <% }); %>
+
+
+                <% } else { %>
+                    <div class="text-center">
+                        <p class="text-danger">No Products Added</p>
+                    </div>
+                <% } %>
+                <!-- Repeat the above structure for each item -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <!-- card end// -->
+
+
+
+
+<div class="pagination-area mt-15 mb-50">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-start">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+        <% if (currentPage < totalPages) { %>
+          <li class="page-item">
+            <a class="page-link" href="?page=<%= currentPage + 1 %>">
+              <i class="material-icons md-chevron_right"></i>
+            </a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+  
+  <!-- ... Your existing code ... -->
+  
+</section>
+
+
+
+<script>
+    function confirmDelete(productId, event) {
+        var confirmation = confirm("Are you sure you want to delete?");
+
+        if (!confirmation) {
+            // If the user clicks "Cancel", prevent the default anchor tag behavior
+            event.preventDefault();
+            console.log('Deletion canceled');
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

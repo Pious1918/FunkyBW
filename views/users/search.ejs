@@ -1,0 +1,110 @@
+<%- include('../layouts/header.ejs') %>
+
+
+<h1>Search Results</h1>
+
+
+<section class="section-padding">
+    <div class="container">
+      <div class="d-flex align-items-center px-3 py-2 border mb-4">
+        <div class="text-start">
+          <h4 class="mb-0 h4 fw-bold">Your search results</h4>
+       </div>
+      </div>
+      <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class="bi bi-person me-2"></i>Account</span></div>
+       <div class="row">
+          <div class="col-12 col-xl-3 filter-column">
+              <nav class="navbar navbar-expand-xl flex-wrap p-0">
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter" aria-labelledby="offcanvasNavbarFilterLabel">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title mb-0 fw-bold text-uppercase" id="offcanvasNavbarFilterLabel">Account</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body account-menu">
+                    <div class="list-group w-100 rounded-0">
+                      <a href="/userdashboard" class="list-group-item active"><i class="bi bi-house-door me-2"></i>Dashboard</a>
+                      <a href="/orders" class="list-group-item"><i class="bi bi-basket3 me-2"></i>Orders</a>
+                      <a href="/profile" class="list-group-item"><i class="bi bi-person me-2"></i>Profile</a>
+                      <a href="/editprofile" class="list-group-item"><i class="bi bi-pencil me-2"></i>Edit Profile</a>
+                      <a href="/editpass" class="list-group-item"><i class="bi bi-pencil me-2"></i>Change Password</a>
+                      <a href="/address" class="list-group-item"><i class="bi bi-pin-map me-2"></i>Saved Address</a>
+                      <a href="/wallet" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wallet</a>
+                      <a href="wishlist.html" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wishlist</a>
+                      
+                      <!-- <a href="authentication-login.html" class="list-group-item"><i class="bi bi-power me-2"></i>Logout</a> -->
+                    </div>
+                  </div>
+                </div>
+            </nav>
+          </div>
+
+
+
+
+        <div class="col-12 col-xl-9">
+            <% if (products.length > 0) { %>
+            <% products.forEach(product => { %>
+            <div class="card rounded-0 mb-3">
+
+              <div class="card-body">
+                <div class="d-flex flex-column flex-xl-row gap-3">
+                 <div class="product-img">
+                    <img src="/ProductImages/<%= product.images[0] %>" width="120" alt="">
+                 </div>
+                  <div class="product-info flex-grow-1">
+                    <h5 class="fw-bold mb-1"><%= product.name %></h5>
+                    
+                      <p class="mb-0"> <%= product.description %></p>
+                     <div class="mt-3 hstack gap-2">
+                       <button type="button" class="btn btn-sm border rounded-0">Size :<%= product.size %></button>
+                       <button type="button" class="btn btn-sm border rounded-0">Qty :<%= product.countInStock %> </button>
+                       <button type="button" class="btn btn-sm border rounded-0">Category:<%= product.category_id.category_name %> </button>
+                  </div>
+                  <div class="product-price d-flex align-items-center gap-2 mt-2">
+                    <div class="h4 fw-bold">
+                      ₹<%= product.offerPrice || product.price %>
+                  </div>
+                  <% if (product.offerPrice && product.price !== product.offerPrice) { %>
+                    <div class="h5 fw-light text-muted text-decoration-line-through">
+                        ₹<%= product.price %>
+                    </div>
+                 
+                <% } %>
+                   
+                    <!-- <div class="h6 fw-bold text-danger">(70% off)</div> -->
+                  </div>
+                 </div>
+                 <div class="d-none d-xl-block vr"></div>
+                 <div class="d-grid align-self-start align-self-xl-center">
+
+                    <a href="/productDetails/<%= product._id %>">
+                        <button type="button" class="btn btn-outline-dark btn-ecomm">View Details</button>
+                    </a>
+                 </div>
+
+                 
+                 
+                </div>
+              </div>
+             
+            </div>
+
+            <% }) %>
+            <% } else { %>
+                      <!-- No Searched Products Found Message -->
+        <div class="alert alert-warning" role="alert">
+            No products found.
+        </div>
+    <% } %>
+
+
+          
+
+
+          </div>
+       </div><!--end row-->
+    </div>
+  </section>
+
+
+<%- include('../layouts/footer.ejs') %>

@@ -1,0 +1,115 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+<style>
+
+
+.card{
+
+width: 300px;
+border:none;
+height: 320px;
+border-radius: 15px;
+padding: 20px;
+background-color: #D50000;
+}
+
+.percent{
+
+font-size: 56px;
+color: #fff;
+}
+
+.discount{
+
+font-size: 27px;
+color: #fff;
+}
+
+
+.line{
+
+color: #fff;
+}
+
+
+
+.form-check-input:checked {
+background-color: #F44336;
+border-color: #F44336;
+}
+
+
+.form-check-input:focus {
+border-color: #d50000;
+outline: 0;
+box-shadow: none;
+}
+
+
+.form-check {
+display: block;
+min-height: 1.5rem;
+padding-left: 1.75em;
+margin-bottom: -5px;
+}
+</style>
+
+
+
+<section class="p-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-4">
+                <div class="card">
+
+
+                    <div class="text-center">
+                
+                        <div class="d-flex flex-row text-center">
+                
+                        <!-- <img src="https://i.imgur.com/bIgSEvT.png" width="70"> -->
+                        
+                        <div class="d-flex flex-column ml-1">
+                
+                            <h1 class="mb-0 percent"></h1>
+                            <span class="discount">Refferal</span>
+                            
+                        </div>
+                    </div>
+                        
+                    </div>
+                
+                    <hr class="line">
+                
+                    <!-- <span class="text-white">Ultimate discount for all customers across all country on all products at bbbootstrap.com</span> -->
+                
+                    <p class="text-white">refferalBonus : <%= currentref[0].refferalBonus %></p>
+                    <p class="text-white">signupBonus :  <%= currentref[0].signupBonus %></p></p>
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                
+                        <!-- <span class="text-white">Active</span> -->
+                        <a href="/admin/editref?id=<%= currentref[0]._id %>">
+                            <button>Change offer</button>
+                        </a>
+                        
+                
+                    
+                        
+                    </div>
+                     
+                
+                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: "funky"
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: "funkypass"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  labels:
+    app: mongodb
+spec:
+  ports:
+  # here we didnt give a target port. If dont specify it kubernetes will automatically use the value of the 'port' field as the targetport
+    - port: 27017
+  selector:
+    app: mongodb
+  type: ClusterIP

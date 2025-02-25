@@ -1,0 +1,68 @@
+<%- include('../admin_layout/adminHeader.ejs') %>
+
+
+<section class="p-2">
+   
+    
+    <div class="container">
+      <h1 class="mt-2">Coupons</h1>
+        <div>
+          
+            <a href="/admin/addcoupon" class="btn btn-primary btn-sm rounded">New Coupon</a>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-12">
+              <div class="table-responsive">
+                  <table class="table">
+                      <thead class="thead-dark">
+                          <tr>
+                              <!-- <th scope="col">Sl No</th> -->
+                              <th scope="col">Coupon Code</th>
+                              <th scope="col">Discount(%)</th>
+                              <th scope="col">Valid From</th>
+                              <th scope="col">Valid To</th>
+                              <th scope="col">Min Amount</th>
+                              <th scope="col">Max Amount</th>
+                              <th scope="col">Action</th>
+                              <!-- <th scope="col">Status</th> -->
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <% currentCoupons.forEach(coupon => { %>
+                              <tr>
+                                  <!-- <th scope="row">3</th> -->
+                                  <td><%= coupon.code %></td>
+                                  <td><%= coupon.discountPercentage %></td>
+                                  <td><%= formatDate(coupon.startingDate) %></td>
+                                  <td><%= formatDate(coupon.expirationDate) %></td>
+                                  <td><%= coupon.minTotal %></td>
+                                  <td><%= coupon.maxTotal %></td>
+                                  <td><a class="btn btn-danger text" href="/admin/deletecou?id=<%= coupon._id %>" onclick="confirmDelete('<%= coupon._id %>' , event)">Delete</a></td>
+                                  <!-- <td>active</td> -->
+                              </tr>
+                          <% }); %>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+      
+    </div>
+</section>
+
+
+<script>
+  function confirmDelete(couponId, event) {
+        var confirmation = confirm("Are you sure you want to delete?");
+
+        if (!confirmation) {
+            event.preventDefault();
+            // If the user clicks "Cancel", return false to prevent the default button behavior
+            console.log('Deletion canceled');
+            return false;
+        }
+    }
+</script>
+
+
+<%- include('../admin_layout/adminFooter.ejs') %>

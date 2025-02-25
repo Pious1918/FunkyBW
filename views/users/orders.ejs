@@ -1,0 +1,285 @@
+<%- include('../layouts/header.ejs') %>
+
+
+
+
+
+<section class="section-padding p-4">
+    <div class="container p-5">
+      <div class="d-flex align-items-center px-3 py-2 border mb-4">
+        <div class="text-start">
+          <h4 class="mb-0 h4 fw-bold">Account - Orders</h4>
+       </div>
+      </div>
+      <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class="bi bi-person me-2"></i>Account</span></div>
+       <div class="row">
+          <div class="col-12 col-xl-3 filter-column">
+              <nav class="navbar navbar-expand-xl flex-wrap p-0">
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter" aria-labelledby="offcanvasNavbarFilterLabel">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title mb-0 fw-bold text-uppercase" id="offcanvasNavbarFilterLabel">Account</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body account-menu">
+                    <div class="list-group w-100 rounded-0">
+                      <a href="/userdashboard" class="list-group-item active"><i class="bi bi-house-door me-2"></i>Dashboard</a>
+                      <a href="/orders" class="list-group-item"><i class="bi bi-basket3 me-2"></i>Orders</a>
+                      <a href="/profile" class="list-group-item"><i class="bi bi-person me-2"></i>Profile</a>
+                      <a href="/editprofile" class="list-group-item"><i class="bi bi-pencil me-2"></i>Edit Profile</a>
+                      <a href="/editpass" class="list-group-item"><i class="bi bi-pencil me-2"></i>Change Password</a>
+                      <a href="/address" class="list-group-item"><i class="bi bi-pin-map me-2"></i>Saved Address</a>
+                      <a href="/wallet" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wallet</a>
+                      <!-- <a href="wishlist.html" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wishlist</a> -->
+                      <a href="/referal" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Referal Code</a>
+                      <a href="/logout" class="list-group-item"><i class="bi bi-power me-2"></i>Logout</a>
+
+                      <!-- <a href="authentication-login.html" class="list-group-item"><i class="bi bi-power me-2"></i>Logout</a> -->
+                    </div>
+                  </div>
+                </div>
+            </nav>
+          </div>
+
+
+          
+          <div class="col-12 col-xl-9">
+            
+
+            <div class="card rounded-0 mb-3 bg-light">
+              <div class="card-body">
+                <div class="d-flex flex-column flex-xl-row gap-3 align-items-center">
+                  <div class="">
+           
+                </div>
+              </div>
+            </div>
+            <% orders.forEach(items => { %>
+            <div class="card rounded-0 mb-3">
+              <div class="card-body">
+              
+                <div class="d-flex flex-column flex-xl-row gap-3">
+                 <div class="product-img">
+                    <img src="/ProductImages/<%= items.ordereditems.images[0]%>" width="120" alt="">
+                 </div>
+                  <div class="product-info flex-grow-1">
+                    <h5 class="fw-bold mb-1"><%= items.ordereditems.name%></h5>
+                      
+                      <div class="mt-3">
+                        <p class="mb-0"><strong>Order id:</strong> <%= items._id%></p>
+                        <p class="mb-0"><strong>Size:</strong> <%= items.ordereditems.size%></p>
+                        <p class="mb-0"><strong>Quantity:</strong> <%= items.items.quantity%></p>
+                        <p class="mb-0"><strong>Price</strong> <%= items.items.price%></p>
+
+                        
+                        <% if (items.items.status === 'returned' || items.items.status === 'cancelled') { %>
+                          <p class="mb-0 text-danger"><strong>Status:</strong> <%= items.items.status %></p>
+                      <% } else { %>
+                          <p class="mb-0 text-success"><strong>Status:</strong>  <%= items.items.status %></p>
+                      <% } %>
+
+
+                      <% if (items.items.status === 'returned') { %>
+                        <p class="mb-0 text-danger"><strong>Return Reason:</strong> <%= items.items.returnreason %></p>
+                    <% } %>
+                    
+
+                     
+
+
+                        <p class="mb-0"><strong>Payment:</strong> <%= items.payment%></p>
+                        <p class="mb-0"><strong>Order Date:</strong>  <%= new Date(items.createdAt).toLocaleDateString() %></p>
+                    </div>
+                 </div>
+           
+                 <div class="d-none d-xl-block vr"></div>
+                 <div class="d-grid align-self-start align-self-xl-center">
+                    <a href="/details?orderId=<%= items._id %>&&prodId=<%= items.items.product_id %>" class="btn btn-outline-dark btn-ecomm">
+                        View Details
+                      </a>
+                      
+                      <% if (items.items.status !== 'returned' && items.items.status !== 'cancelled') { %>
+                        <div class="mt-3">
+                          <a href="/invoice-generate?orderId=<%=items._id %>" class="btn btn-outline-primary btn-ecomm" target="_blank">
+                            Download Invoice
+                          </a>
+                        </div>
+                      <% } %>
+                      
+
+                      
+                      <% if (items.items.status === 'pending' || items.items.status === 'shipped') { %>
+                        <!-- Show Cancel Order button when status is 'pending' -->
+                        <form id="cancelOrderForm" action="/cancelOrder?orderId=<%= items._id %>&&prodId=<%= items.items.product_id %>" method="POST">
+                            <button type="submit" class="btn btn-outline-dark btn-ecomm mt-3" onclick="confirmCancel('<%= items.items.product_id %>')">Cancel Order</button>
+                        </form>
+                    <% } else if (items.items.status === 'cancel') { %>
+                        <!-- Show Cancelled message when status is 'cancel' -->
+                        <p class="text-danger">Order Cancelled</p>
+
+                        <% } else if (items.items.status === 'delivered') { %>
+                      
+
+
+
+                      <form>
+                          <button type="submit" class="btn btn-danger btn-outline-dark btn-ecomm mt-3" onclick="returnproduct('<%= items.items.product_id %>','<%= items._id %>',event)">Return Product</button>
+                      </form>
+                      
+                          
+                    <% } %>
+                    
+                    
+                    
+                    
+                 </div>
+                 
+                </div>
+             
+               
+              </div>
+        
+            </div>
+            <%})%>
+
+            
+
+          </div>
+       </div><!--end row-->
+      
+    </div>
+  </section>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+
+function confirmCancel(productId) {
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to cancel the order?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If user clicks "Yes", submit the form
+                document.getElementById('cancelOrderForm').submit();
+            } 
+                // If user clicks "No", do nothing
+           
+             
+        });
+        event.preventDefault();
+    }
+
+
+
+  // function confirmCancel(productId, event) {
+  //     var confirmation = confirm("Are you sure you want to Cancel the order?");
+
+  //     if (!confirmation) {
+  //         // If the user clicks "Cancel", prevent the default anchor tag behavior
+  //         event.preventDefault();
+  //         console.log('Deletion canceled');
+  //     }
+  // }
+
+
+// function returnproduct(productId, orderId, event) {
+//     var returnReason = prompt("Please enter the reason for returning the product:");
+
+//     if (returnReason !== null) {
+//         // Create an XMLHttpRequest object
+//         var xhr = new XMLHttpRequest();
+
+//         // Configure it to send a POST request to the server
+//         xhr.open('POST', '/returnproduct?orderId=' + encodeURIComponent(orderId) + '&prodId=' + encodeURIComponent(productId), true);
+//         xhr.setRequestHeader('Content-Type', 'application/json');
+
+//         // Set up the data to send in the request body
+//         var data = {
+//             returnReason: returnReason
+//         };
+
+//         // Convert the data to JSON and send it
+//         xhr.send(JSON.stringify(data));
+
+//         // Handle the response from the server if needed
+//         xhr.onload = function () {
+//             if (xhr.status === 200) {
+//                 console.log('Return request processed successfully:', xhr.responseText);
+//                 // You can add more logic here based on the server response if needed
+//             } else {
+//                 console.error('Error processing return request:', xhr.statusText);
+//             }
+//         };
+//     } else {
+//       event.preventDefault();
+//         console.log('Return canceled');
+//     }
+// }
+
+
+
+function returnproduct(productId, orderId, event) {
+  event.preventDefault();
+        // Show SweetAlert input dialog for the return reason
+        Swal.fire({
+            title: 'Enter Return Reason',
+            input: 'text',
+            inputLabel: 'Reason',
+            inputPlaceholder: 'Please enter the reason for returning the product',
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If user clicks "Submit", proceed with sending the request
+
+                // Create an XMLHttpRequest object
+                var xhr = new XMLHttpRequest();
+
+                // Configure it to send a POST request to the server
+                xhr.open('POST', '/returnproduct?orderId=' + encodeURIComponent(orderId) + '&prodId=' + encodeURIComponent(productId), true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                // Set up the data to send in the request body
+                var data = {
+                    returnReason: result.value
+                };
+
+                // Convert the data to JSON and send it
+                xhr.send(JSON.stringify(data));
+
+                // Handle the response from the server if needed
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        console.log('Return request processed successfully:', xhr.responseText);
+                        window.location.reload();
+                        // You can add more logic here based on the server response if needed
+                    } else {
+                        console.error('Error processing return request:', xhr.statusText);
+                    }
+                };
+            } else {
+                // If user clicks "Cancel", do nothing
+                console.log('Return canceled');
+               
+            }
+        });
+        // event.preventDefault();
+    }
+
+
+
+
+
+</script>
+
+
+
+<%- include('../layouts/footer.ejs') %>

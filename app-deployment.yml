@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app: app
+    name: backend
+    # below specification for deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+        name: backend
+
+        # below specifiaction for pods /blue print for a pod which explains the image, port, name of the pod
+
+    spec:
+      containers:
+      - name: backend-container
+        image: nspious/funkyproject:1
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URL
+          value: mongodb+srv://funky:funky@funky.htheg30.mongodb.net/funky
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app
+spec:
+  selector:
+    app: app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      nodePort: 30001
+  type: NodePort
