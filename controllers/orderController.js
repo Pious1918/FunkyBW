@@ -6,7 +6,7 @@ const User = require("../models/userModel");
 const cartDb = require("../models/cartModel");
 
 const productModel = require("../models/productModel");
-
+const fs = require("fs");
 const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -191,7 +191,7 @@ const loadCheckout = async (req, res) => {
         $unwind: "$productDetails", // Unwind the array of product details
       },
     ]);
-  
+
     const coupons = await couponModel.find()
 
     totalAmount =
@@ -415,7 +415,7 @@ const walletPayment = async (req, res) => {
 const thanku = (req, res) => {
   try {
     res.render("users/thanku");
-  } catch (error) {}
+  } catch (error) { }
 };
 
 // loading order page
@@ -641,15 +641,15 @@ const returnProduct = async (req, res) => {
 
     await WalletModel.findByIdAndUpdate(
       userWallet,
-      { 
+      {
         $inc: { balance: returnPrice },
-        $push: { 
-          transactions: { 
-            amount: returnPrice, 
+        $push: {
+          transactions: {
+            amount: returnPrice,
             description: "returned amount", // Description indicating amount was returned
-            createdAt: new Date() 
-          } 
-        } 
+            createdAt: new Date()
+          }
+        }
       }
     );
 
@@ -704,31 +704,10 @@ const invoiceGeneration = async (req, res, next) => {
       address: address,
     };
 
-    // Render the EJS template
+    res.render("users/invoice", data);
 
-    // uses the ejs library to render an EJS template located at the specified path (../views/users/invoice.ejs).
-    const ejsTemplate = path.resolve(__dirname, "../views/users/invoice.ejs");
 
-    const ejsData = await ejs.renderFile(ejsTemplate, data);
 
-    // Launch Puppeteer and generate PDF
-    
-
-    
-    const browser = await puppeteer.launch({ 
-      headless: "new",
-      executablePath: '/snap/bin/chromium',
-    });
-    const page = await browser.newPage();
-    await page.setContent(ejsData, { waitUntil: "networkidle0" });
-    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-
-    // Close the browser
-    await browser.close();
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
-    res.send(pdfBuffer);
   } catch (error) {
     console.log("Invoice error", error);
     next(error);
